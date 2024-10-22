@@ -3,10 +3,10 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native'; 
 
 const Header = () => {
-  const navigation = useNavigation(); // Get navigation instance
+  const navigation = useNavigation(); 
 
   const handleHomePress = () => {
-    navigation.navigate('HomePage'); // Navigate to HomePage
+    navigation.navigate('HomePage'); 
   };
 
   const handleLoginPress = () => {
@@ -37,7 +37,7 @@ const Header = () => {
 const styles = StyleSheet.create({
   header: {
     width: '100%',
-    paddingTop: 50, // To account for the camera notch on iOS devices
+    paddingTop: 50, 
     paddingHorizontal: 20,
     paddingBottom: 10,
     backgroundColor: '#333333',

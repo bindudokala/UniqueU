@@ -5,16 +5,12 @@ import {
   TouchableOpacity,
   StyleSheet,
   Text,
+  Alert,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import Auth0 from 'react-native-auth0';
-import * as SecureStore from 'expo-secure-store';
-import { auth0Config } from '../config/authConfig';
-
-const auth0 = new Auth0({
-  domain: auth0Config.domain,
-  clientId: auth0Config.clientId,
-});
+import * as SecureStore from 'expo-secure-store'; 
+import { auth } from '../config/firebaseConfig'; 
+import { signInWithEmailAndPassword } from 'firebase/auth'; 
 
 const LoginScreen = () => {
   const navigation = useNavigation();
@@ -24,20 +20,17 @@ const LoginScreen = () => {
 
   const onLogin = async () => {
     try {
-      const credentials = await auth0.webAuth.authorize({
-        scope: 'openid profile email',
-        audience: `https://${auth0Config.domain}/userinfo`,
-        username: email,
-        password,
-      });
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
 
-      console.log('Logged in with credentials: ', credentials);
-      await SecureStore.setItemAsync('authToken', credentials.accessToken);
+      console.log('Logged in user:', user);
+      await SecureStore.setItemAsync('authToken', user.uid); // Storing the user UID as token
 
-      alert('Login successful!');
+      Alert.alert('Success', 'Login successful!');
+      navigation.replace('HomePage'); // Navigation to HomePageScreen after login
     } catch (error) {
-      console.log('Login error: ', error);
-      alert('Authentication failed. Please try again.');
+      console.log('Login error:', error);
+      Alert.alert('Authentication Failed', error.message);
     }
   };
 
@@ -49,7 +42,7 @@ const LoginScreen = () => {
         <TextInput
           style={[styles.input, styles.inputPlaceholder]}
           placeholder="Email"
-          placeholderTextColor="#606F7B" // Darker color to make it more visible
+          placeholderTextColor="#606F7B"
           value={email}
           onChangeText={setEmail}
           keyboardType="email-address"
@@ -60,7 +53,7 @@ const LoginScreen = () => {
         <TextInput
           style={[styles.input, styles.inputPlaceholder]}
           placeholder="Password"
-          placeholderTextColor="#606F7B" // Darker color to make it more visible
+          placeholderTextColor="#606F7B"
           value={password}
           onChangeText={setPassword}
           secureTextEntry
@@ -123,8 +116,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#F7FAFC',
   },
   inputPlaceholder: {
-    color: '#333333', // Ensures input text is visible if user starts typing
-    fontWeight: '500', // This gives a thicker, more visible style to the placeholder
+    color: '#333333',
+    fontWeight: '500',
   },
   loginButton: {
     width: '100%',

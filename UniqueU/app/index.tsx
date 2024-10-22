@@ -1,22 +1,34 @@
-import 'react-native-gesture-handler'; // Import for React Navigation gesture handling
-import React from 'react';
+import 'react-native-gesture-handler';
+import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { View, StyleSheet } from 'react-native';
-import HomePageScreen from '../components/HomePageScreen'; // Update paths as necessary
 import LoginScreen from '../components/LoginScreen';
 import SignupScreen from '../components/SignupScreen';
-import Header from '../components/Header'; // Import the Header component
+import HomePageScreen from '../components/HomePageScreen';
+import Header from '../components/Header';
+import { View, Text, StyleSheet } from 'react-native';
+import { AuthProvider, useAuth } from '../context/AuthContext'; 
 
 const Stack = createStackNavigator();
 
 export default function App() {
   return (
-      <View style={{ flex: 1 }}>
-        {/* Add Header at the top */}
-        <Header />
+    <AuthProvider>
+      <RootNavigator />
+    </AuthProvider>
+  );
+}
 
-        {/* Stack Navigator below the Header */}
+const RootNavigator = () => {
+  const { user, isLoading } = useAuth();
+
+  if (isLoading) {
+    return <Text>Loading...</Text>;
+  }
+  
+  return (
+      <View style={{ flex: 1 }}>
+        <Header />
         <Stack.Navigator
           initialRouteName="HomePage"
           screenOptions={{ headerShown: false }}
@@ -27,7 +39,7 @@ export default function App() {
         </Stack.Navigator>
       </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {

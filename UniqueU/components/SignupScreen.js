@@ -1,4 +1,3 @@
-// SignupScreen.js
 import React, { useState } from 'react';
 import {
   View,
@@ -6,19 +5,34 @@ import {
   TouchableOpacity,
   StyleSheet,
   Text,
+  Alert,
 } from 'react-native';
+import { auth, createUserWithEmailAndPassword } from '../config/firebaseConfig';
+import { useNavigation } from '@react-navigation/native';
 
 const SignupScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const navigation = useNavigation();
 
-  const onSignup = () => {
+  const onSignup = async () => {
     if (password !== confirmPassword) {
-      alert('Passwords do not match!');
+      Alert.alert('Error', 'Passwords do not match!');
       return;
     }
-    alert('Signup successful!');
+
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      Alert.alert('Success', 'Signup successful!');
+      navigation.replace('HomePage'); 
+      console.log('User signed up:', user);
+    } catch (error) {
+      console.error('Signup error:', error);
+      Alert.alert('Error', error.message);
+    }
   };
 
   return (
@@ -29,7 +43,7 @@ const SignupScreen = () => {
         <TextInput
           style={[styles.input, styles.inputPlaceholder]}
           placeholder="Email"
-          placeholderTextColor="#606F7B" // Darker color for better visibility
+          placeholderTextColor="#606F7B"
           value={email}
           onChangeText={setEmail}
           autoCapitalize="none"
@@ -39,19 +53,27 @@ const SignupScreen = () => {
         <TextInput
           style={[styles.input, styles.inputPlaceholder]}
           placeholder="Password"
-          placeholderTextColor="#606F7B" // Darker color for better visibility
+          placeholderTextColor="#606F7B"
           value={password}
           onChangeText={setPassword}
           secureTextEntry
+          autoCapitalize="none"
+          autoCorrect={false}
+          textContentType="newPassword"  
+          autoComplete="password"  
         />
 
         <TextInput
           style={[styles.input, styles.inputPlaceholder]}
           placeholder="Confirm Password"
-          placeholderTextColor="#606F7B" // Darker color for better visibility
+          placeholderTextColor="#606F7B"
           value={confirmPassword}
           onChangeText={setConfirmPassword}
           secureTextEntry
+          autoCapitalize="none"
+          autoCorrect={false}
+          textContentType="newPassword"  
+          autoComplete="password"  
         />
 
         <TouchableOpacity style={styles.signupButton} onPress={onSignup}>
@@ -91,7 +113,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   inputPlaceholder: {
-    color: '#333333', 
+    color: '#333333',
     fontWeight: '500',
   },
   signupButton: {
