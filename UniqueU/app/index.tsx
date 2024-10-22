@@ -2,9 +2,9 @@ import 'react-native-gesture-handler';
 import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import LoginScreen from '../components/LoginScreen';
-import SignupScreen from '../components/SignupScreen';
-import HomePageScreen from '../components/HomePageScreen';
+import LoginPage from '../components/LoginPage';
+import SignupPage from '../components/SignupPage';
+import HomePage from '../components/HomePage';
 import Header from '../components/Header';
 import { View, Text, StyleSheet } from 'react-native';
 import { AuthProvider, useAuth } from '../context/AuthContext'; 
@@ -33,9 +33,9 @@ const RootNavigator = () => {
           initialRouteName="HomePage"
           screenOptions={{ headerShown: false }}
         >
-          <Stack.Screen name="HomePage" component={HomePageScreen} />
-          <Stack.Screen name="Login" component={LoginScreen} />
-          <Stack.Screen name="Signup" component={SignupScreen} />
+          <Stack.Screen name="HomePage" component={HomePage} />
+          <Stack.Screen name="Login" component={LoginPage} />
+          <Stack.Screen name="Signup" component={SignupPage} />
         </Stack.Navigator>
       </View>
   );

@@ -1,10 +1,9 @@
-// HomePageScreen.js
 import React from 'react';
 import { View, Text, StyleSheet, Button } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { auth } from '../config/firebaseConfig'; // Firebase instance
 
-const HomePageScreen = () => {
+const HomePage = () => {
   const navigation = useNavigation();
 
   const onLogout = async () => {
@@ -39,4 +38,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomePageScreen;
+export default HomePage;

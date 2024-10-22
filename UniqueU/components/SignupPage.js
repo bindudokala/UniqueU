@@ -10,7 +10,7 @@ import {
 import { auth, createUserWithEmailAndPassword } from '../config/firebaseConfig';
 import { useNavigation } from '@react-navigation/native';
 
-const SignupScreen = () => {
+const SignupPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -131,4 +131,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SignupScreen;
+export default SignupPage;

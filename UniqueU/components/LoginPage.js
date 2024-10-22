@@ -12,7 +12,7 @@ import * as SecureStore from 'expo-secure-store';
 import { auth } from '../config/firebaseConfig'; 
 import { signInWithEmailAndPassword } from 'firebase/auth'; 
 
-const LoginScreen = () => {
+const LoginPage = () => {
   const navigation = useNavigation();
 
   const [email, setEmail] = useState('');
@@ -156,4 +156,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginScreen;
+export default LoginPage;
