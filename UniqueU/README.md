@@ -1,4 +1,3 @@
-readme_content = """
 # **UniqueU: E-commerce Mobile Application**
 
 **UniqueU** is a cross-platform mobile application built using **React Native**. It allows users to browse products, add them to their cart, and proceed to checkout with an intuitive shopping experience.
