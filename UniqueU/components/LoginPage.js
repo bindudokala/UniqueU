@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
   loginButton: {
     width: '100%',
     height: 50,
-    backgroundColor: '#1E5AA7',
+    backgroundColor: 'black',
     borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
@@ -134,7 +134,6 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   forgotPassword: {
-    color: '#1E5AA7',
     fontSize: 16,
     fontWeight: '600',
     textAlign: 'center',
@@ -147,11 +146,9 @@ const styles = StyleSheet.create({
   },
   signupText: {
     fontSize: 14,
-    color: '#4A5568',
   },
   signupLink: {
     fontSize: 16,
-    color: '#1E5AA7',
     fontWeight: '700',
   },
 });

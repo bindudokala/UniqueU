@@ -9,6 +9,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { AuthProvider, useAuth } from '../context/AuthContext'; 
 import CategoryProductsPage from '../components/CategoryProductsPage'; 
 import ProductDetailsPage from '../components/ProductDetailsPage';
+import CartPage from '../components/CartPage';
 
 const Stack = createStackNavigator();
 
@@ -49,6 +50,8 @@ const RootNavigator = () => {
           component={ProductDetailsPage} 
           options={{ title: 'Product Details' }} 
         />
+
+        <Stack.Screen name="Cart" component={CartPage} />
         </Stack.Navigator>
       </View>
   );

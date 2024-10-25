@@ -8,10 +8,11 @@ import {
   StyleSheet,
   Dimensions,
 } from 'react-native';
-import { fetchProductsByCategory } from '../services/firestoreService'; 
+import { fetchProductsByCategory } from '../services/firestoreService';
+import { Ionicons } from '@expo/vector-icons'; 
 
-const { width } = Dimensions.get('window'); 
-const ITEM_WIDTH = (width - 40) / 2; 
+const { width } = Dimensions.get('window');
+const ITEM_WIDTH = (width - 30) / 2;
 
 const CategoryProductsPage = ({ route, navigation }) => {
   const { parentDocId, category } = route.params;
@@ -35,26 +36,30 @@ const CategoryProductsPage = ({ route, navigation }) => {
       style={styles.productCard}
       onPress={() => navigation.navigate('ProductDetails', { product: item })}
     >
-      <Image
-        source={{ uri: item.imageUrl }}
-        style={styles.productImage}
-      />
+      <Image source={{ uri: item.imageUrl }} style={styles.productImage} />
       <View style={styles.productInfo}>
         <Text style={styles.productName}>{item.name}</Text>
         <Text style={styles.productPrice}>${item.price}</Text>
-        <Text style={styles.productSize}>Free Size</Text>
       </View>
     </TouchableOpacity>
   );
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Products in {category}</Text>
+      <View style={styles.headerContainer}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+          <Ionicons name="chevron-back" size={22} color="black" />
+          <Text style={styles.backButtonText}>Back</Text>
+        </TouchableOpacity>
+        <Text style={styles.header}>Products in {category}</Text>
+      </View>
+
       <FlatList
         data={products}
         renderItem={renderProduct}
         keyExtractor={(item) => item.id}
         numColumns={2}
+        columnWrapperStyle={styles.row}
         contentContainerStyle={styles.listContainer}
       />
     </View>
@@ -65,50 +70,73 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    padding: 10,
+    paddingHorizontal: 10,
+  },
+  headerContainer: {
+    height: 60,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center', 
+    position: 'relative', 
+    marginBottom: 10,
+  },
+  backButton: {
+    position: 'absolute', 
+    left: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  backButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: 'black',
   },
   header: {
-    fontSize: 24,
+    fontSize: 18,
     fontWeight: 'bold',
     textAlign: 'center',
-    marginVertical: 10,
   },
   listContainer: {
-    alignItems: 'flex-start', 
+    paddingBottom: 20,
+  },
+  row: {
+    justifyContent: 'space-between',
+    marginBottom: 15,
   },
   productCard: {
     width: ITEM_WIDTH,
     backgroundColor: '#fff',
-    margin: 5,
     borderRadius: 10,
     overflow: 'hidden',
-    elevation: 3, 
-    shadowColor: '#000', 
+    elevation: 2,
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
+    shadowOpacity: 0.1,
     shadowRadius: 5,
   },
   productImage: {
     width: '100%',
-    height: 250, 
+    height: 320,
+    borderRadius: 10,
     resizeMode: 'cover',
   },
   productInfo: {
     padding: 10,
+    alignItems: 'center',
   },
   productName: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '600',
     textAlign: 'center',
     marginBottom: 5,
   },
   productPrice: {
-    fontSize: 16,
-    color: '#1E88E5',
+    fontSize: 15,
+    fontWeight: '600',
     textAlign: 'center',
   },
   productSize: {
-    fontSize: 14,
+    fontSize: 13,
     color: '#888',
     textAlign: 'center',
     marginTop: 5,

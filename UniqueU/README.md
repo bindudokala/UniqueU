@@ -1,50 +1,69 @@
-# Welcome to your Expo app 👋
+readme_content = """
+# **UniqueU: E-commerce Mobile Application**
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+**UniqueU** is a cross-platform mobile application built using **React Native**. It allows users to browse products, add them to their cart, and proceed to checkout with an intuitive shopping experience.
 
-## Get started
+## **Project Overview**
 
-1. Install dependencies
+The UniqueU app offers an easy-to-use interface for shopping enthusiasts. Users can browse through product categories, view product details, and seamlessly add items to their cart. With an emphasis on modern design, the project features a clean user interface for product pages, cart functionality, and essential authentication flows like login and signup.
 
-   ```bash
-   npm install
-   ```
+## **Features Implemented So Far**
 
-2. Start the app
+### 1. **Home Page**
+- Displays available product categories.
+- Added a loading indicator ("Loading categories...") for improved user experience.
 
-   ```bash
-    npx expo start
-   ```
+### 2. **Header Navigation**
+- Customized header with:
+  - **Logo (UniqueU)** aligned to the left.
+  - **Login**, **Signup**, **Profile Icon**, and **Cart Icon** aligned to the right.
+  - Even spacing between header elements.
+- Clicking on the **Login** or **Signup** redirects users to the respective screens.
 
-In the output, you'll find options to open the app in a
+### 3. **Category Products Page**
+- Displays products under a specific category.
+- Each product card shows:
+  - Product Image.
+  - Product Name, Price, and Size.
+- **Back Button** at the top allows users to return to the previous screen.
+- Products displayed in a two-column grid layout.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+### 4. **Product Details Page**
+- Displays the selected product’s detailed information, including:
+  - Product image (with rounded corners for aesthetics).
+  - Name, Price, Description, and Size (Free Size option).
+- **Add to Cart Button**:
+  - Validates that the size is selected before adding to cart.
+  - If successfully added, the button text changes to **"Go to Cart"**.
+- **Navigation to Cart** from the Product Details Page.
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+### 5. **Cart Page**
+- Displays the product(s) added to the cart with:
+  - Product Image, Name, Price, and Size.
+  - **Back Button** aligned properly to the left, with **"Cart: 1 Item"** centered in the header.
+- **Price Breakdown Section**:
+  - Order Subtotal.
+  - Grand Total (inclusive of taxes).
+- **Checkout Section**:
+  - **Continue Shopping** button (navigates to the HomePage).
+  - **Proceed to Checkout** button with an alert confirming the action.
 
-## Get a fresh project
+### 6. **Authentication (Login and Signup)**
+- **Firebase Authentication** integrated with **React Native AsyncStorage** for persistence.
+- Authentication state managed through `AuthProvider` and Firebase’s `onAuthStateChanged` listener.
+- If the user is not logged in, the app redirects to the **Login Page**.
 
-When you're ready, run:
+### 7. **Cart Management**
+- Cart dynamically updates based on the product added from the **Product Details Page**.
+- Displays a relevant message if the cart is empty.
 
-```bash
-npm run reset-project
-```
+## **Technology Stack**
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+- **Frontend**: React Native, Expo
+- **Navigation**: React Navigation
+- **Backend Services**: Firebase Firestore and Firebase Authentication
+- **State Management**: React Hooks (`useState`, `useEffect`, `useContext`)
+- **Icons**: Expo Vector Icons (`Ionicons`)
+- **Persistence**: AsyncStorage for user sessions
 
-## Learn more
 
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.

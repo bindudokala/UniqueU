@@ -22,13 +22,13 @@ export const fetchParentDocId = async () => {
 };
 
 /**
- * Fetch categories (sarees, kurtas, lehangas) under the parent document.
+ * Fetch categories (sarees, kurtis, lehangas) under the parent document.
  * This assumes known categories; Firestore doesn't support dynamic listing of sub-collections.
  * @param {string} parentDocId - The ID of the parent document.
  */
 export const fetchCategories = async (parentDocId) => {
   try {
-    const categories = ['sarees', 'kurtas', 'lehangas']; 
+    const categories = ['sarees', 'kurtis', 'Lehengas']; 
     return categories;
   } catch (error) {
     console.error('Error fetching categories:', error);

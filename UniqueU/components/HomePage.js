@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   categoryButton: {
-    backgroundColor: '#1E88E5',
+    backgroundColor: 'black',
     padding: 15,
     marginVertical: 10,
     borderRadius: 8,
