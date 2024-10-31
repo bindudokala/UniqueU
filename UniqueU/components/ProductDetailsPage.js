@@ -165,10 +165,11 @@ const styles = StyleSheet.create({
   },
   addToCartButton: {
     backgroundColor: '#000',
-    paddingVertical: 18,
+    paddingVertical: 20,
     borderRadius: 10,
     alignItems: 'center',
     marginTop: 12,
+    marginBottom: 15,
   },
   addToCartText: {
     color: '#fff',
