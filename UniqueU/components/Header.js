@@ -2,12 +2,15 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { FontAwesome } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
+import { useCart } from '../components/CartContext';
 
 const Header = () => {
   const navigation = useNavigation();
+  const { cartItems } = useCart();
 
   const handleHomePress = () => {
-    navigation.navigate('HomePage');
+    navigation.navigate('Home');
   };
 
   const handleLoginPress = () => {
@@ -47,9 +50,16 @@ const Header = () => {
           <FontAwesome name="user" size={22} color="black" />
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={handleCartPress} style={styles.icon}>
-          <FontAwesome name="shopping-cart" size={22} color="black" />
-        </TouchableOpacity>
+        <View style={styles.iconContainer}>
+          <TouchableOpacity onPress={handleCartPress} style={{ position: 'relative' }}>
+            <Ionicons name="cart-outline" size={22} color="black" />
+            {cartItems.length > 0 && (
+              <View style={styles.cartBadge}>
+                <Text style={styles.cartBadgeText}>{cartItems.length}</Text>
+              </View>
+            )}
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
@@ -81,8 +91,24 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginHorizontal: 5, 
   },
-  icon: {
-    marginLeft: 10, 
+  iconContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: 10,
+  },
+  cartBadge: {
+    position: 'absolute',
+    top: -5,
+    right: -5,
+    backgroundColor: 'red',
+    borderRadius: 10,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+  },
+  cartBadgeText: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: 'bold',
   },
 });
 

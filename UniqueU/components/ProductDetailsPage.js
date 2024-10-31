@@ -9,18 +9,24 @@ import {
   Alert,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useCart } from '../components/CartContext';
 
 const ProductDetailsPage = ({ route }) => {
   const { product } = route.params;
   const [selectedSize, setSelectedSize] = useState(null); 
   const [isAddedToCart, setIsAddedToCart] = useState(false);
   const navigation = useNavigation();
+  const { addItemToCart } = useCart();
 
   const handleAddToCart = () => {
     if (!selectedSize) {
       Alert.alert('Size Selection Required', 'Please select a size.');
       return;
     }
+
+    const productWithSize = { ...product, size: selectedSize };
+    addItemToCart(productWithSize);
+
     setIsAddedToCart(true);
     // Alert.alert('Added to Cart', `${product.name} has been added to your cart!`);
   };

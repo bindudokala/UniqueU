@@ -10,13 +10,18 @@ import { AuthProvider, useAuth } from '../context/AuthContext';
 import CategoryProductsPage from '../components/CategoryProductsPage'; 
 import ProductDetailsPage from '../components/ProductDetailsPage';
 import CartPage from '../components/CartPage';
+import { CartProvider } from '../components/CartContext';
+import CheckoutPage from '../components/CheckoutPage';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 const Stack = createStackNavigator();
 
 export default function App() {
   return (
     <AuthProvider>
-      <RootNavigator />
+      <CartProvider>
+        <RootNavigator />
+      </CartProvider>
     </AuthProvider>
   );
 }
@@ -29,13 +34,14 @@ const RootNavigator = () => {
   }
   
   return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
       <View style={{ flex: 1 }}>
         <Header />
         <Stack.Navigator
-          initialRouteName="HomePage"
+          initialRouteName="Home"
           screenOptions={{ headerShown: false }}
         >
-          <Stack.Screen name="HomePage" component={HomePage} />
+          <Stack.Screen name="Home" component={HomePage} />
           <Stack.Screen name="Login" component={LoginPage} />
           <Stack.Screen name="Signup" component={SignupPage} />
           
@@ -52,8 +58,15 @@ const RootNavigator = () => {
         />
 
         <Stack.Screen name="Cart" component={CartPage} />
+
+        <Stack.Screen 
+          name="Checkout" 
+          component={CheckoutPage} 
+          options={{ title: 'Checkout' }} 
+        />
         </Stack.Navigator>
       </View>
+    </GestureHandlerRootView>
   );
 };
 

@@ -63,7 +63,7 @@ const HomePage = ({ navigation }) => {
         <Text style={styles.errorText}>{error}</Text>
         <TouchableOpacity 
           style={styles.retryButton} 
-          onPress={() => navigation.replace('HomePage')}
+          onPress={() => navigation.replace('Home')}
         >
           <Text style={styles.retryText}>Retry</Text>
         </TouchableOpacity>

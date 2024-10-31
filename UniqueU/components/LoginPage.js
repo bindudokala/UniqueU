@@ -27,7 +27,7 @@ const LoginPage = () => {
       await SecureStore.setItemAsync('authToken', user.uid); // Storing the user UID as token
 
       Alert.alert('Success', 'Login successful!');
-      navigation.replace('HomePage'); // Navigation to HomePageScreen after login
+      navigation.replace('Home'); // Navigation to HomePageScreen after login
     } catch (error) {
       console.log('Login error:', error);
       Alert.alert('Authentication Failed', error.message);

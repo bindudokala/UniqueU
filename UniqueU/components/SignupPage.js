@@ -27,7 +27,7 @@ const SignupPage = () => {
       const user = userCredential.user;
 
       Alert.alert('Success', 'Signup successful!');
-      navigation.replace('HomePage'); 
+      navigation.replace('Home'); 
       console.log('User signed up:', user);
     } catch (error) {
       console.error('Signup error:', error);
