@@ -24,10 +24,10 @@ const LoginPage = () => {
       const user = userCredential.user;
 
       console.log('Logged in user:', user);
-      await SecureStore.setItemAsync('authToken', user.uid); // Storing the user UID as token
+      await SecureStore.setItemAsync('authToken', user.uid);
 
       Alert.alert('Success', 'Login successful!');
-      navigation.replace('Home'); // Navigation to HomePageScreen after login
+      navigation.replace('Home');
     } catch (error) {
       console.log('Login error:', error);
       Alert.alert('Authentication Failed', error.message);

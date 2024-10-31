@@ -47,9 +47,8 @@ const CategoryProductsPage = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <Ionicons name="chevron-back" size={22} color="black" />
-          <Text style={styles.backButtonText}>Back</Text>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Ionicons name="chevron-back" size={24} color="black" />
         </TouchableOpacity>
         <Text style={styles.header}>Products in {category}</Text>
       </View>
@@ -73,18 +72,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   headerContainer: {
-    height: 60,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center', 
-    position: 'relative', 
-    marginBottom: 10,
-  },
-  backButton: {
-    position: 'absolute', 
-    left: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
+    paddingVertical: 15,
+    backgroundColor: '#fff',
   },
   backButtonText: {
     fontSize: 16,
@@ -92,9 +83,10 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   header: {
-    fontSize: 18,
+    fontSize: 24,
     fontWeight: 'bold',
     textAlign: 'center',
+    flex: 1,
   },
   listContainer: {
     paddingBottom: 20,

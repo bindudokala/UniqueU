@@ -4,11 +4,13 @@ import {
   Text,
   Image,
   StyleSheet,
+  SafeAreaView,
   ScrollView,
   TouchableOpacity,
   Alert,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { Ionicons } from '@expo/vector-icons';
 import { useCart } from '../components/CartContext';
 
 const ProductDetailsPage = ({ route }) => {
@@ -36,50 +38,72 @@ const ProductDetailsPage = ({ route }) => {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.imageGallery}>
-        <Image source={{ uri: product.imageUrl }} style={styles.image} />
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.headerContainer}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Ionicons name="chevron-back" size={24} color="black" />
+          </TouchableOpacity>
+          <Text style={styles.header}>Product Details</Text>
       </View>
 
-      <View style={styles.productDetails}>
-        <Text style={styles.description}>{product.description}</Text>
-        <Text style={styles.price}>${product.price}</Text>
-
-        <Text style={styles.sectionTitle}>Select Size</Text>
-        <View style={styles.sizeContainer}>
-          <TouchableOpacity
-            style={[
-              styles.sizeButton,
-              selectedSize === 'Free Size' && styles.selectedSizeButton,
-            ]}
-            onPress={() => setSelectedSize('Free Size')}
-          >
-            <Text
-              style={[
-                styles.sizeText,
-                selectedSize === 'Free Size' && styles.selectedSizeText,
-              ]}
-            >
-              Free Size
-            </Text>
-          </TouchableOpacity>
+      <ScrollView contentContainerStyle={styles.container}>
+        <View style={styles.imageGallery}>
+          <Image source={{ uri: product.imageUrl }} style={styles.image} />
         </View>
 
-        {isAddedToCart ? (
-          <TouchableOpacity style={styles.addToCartButton} onPress={handleGoToCart}>
-            <Text style={styles.addToCartText}>Go to Cart</Text>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity style={styles.addToCartButton} onPress={handleAddToCart}>
-            <Text style={styles.addToCartText}>Add to Cart</Text>
-          </TouchableOpacity>
-        )}
-      </View>
-    </ScrollView>
+        <View style={styles.productDetails}>
+          <Text style={styles.description}>{product.description}</Text>
+          <Text style={styles.price}>${product.price}</Text>
+
+          <Text style={styles.sectionTitle}>Select Size</Text>
+          <View style={styles.sizeContainer}>
+            <TouchableOpacity
+              style={[
+                styles.sizeButton,
+                selectedSize === 'Free Size' && styles.selectedSizeButton,
+              ]}
+              onPress={() => setSelectedSize('Free Size')}
+            >
+              <Text
+                style={[
+                  styles.sizeText,
+                  selectedSize === 'Free Size' && styles.selectedSizeText,
+                ]}
+              >
+                Free Size
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          {isAddedToCart ? (
+            <TouchableOpacity style={styles.addToCartButton} onPress={handleGoToCart}>
+              <Text style={styles.addToCartText}>Go to Cart</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity style={styles.addToCartButton} onPress={handleAddToCart}>
+              <Text style={styles.addToCartText}>Add to Cart</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  headerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 15,
+    paddingVertical: 15,
+    backgroundColor: '#fff',
+  },
+  header: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    flex: 1,
+  },
   container: {
     flexGrow: 1,
     backgroundColor: '#fff',
@@ -89,6 +113,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     marginBottom: 15,
+    flex: 1,
   },
   image: {
     width: '100%',
@@ -108,13 +133,13 @@ const styles = StyleSheet.create({
   price: {
     fontSize: 22,
     color: '#000',
-    marginBottom: 10,
+    marginBottom: 15,
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: '600',
-    marginVertical: 10,
     color: '#000',
+    marginBottom: 10,
   },
   sizeContainer: {
     flexDirection: 'row',
@@ -140,10 +165,10 @@ const styles = StyleSheet.create({
   },
   addToCartButton: {
     backgroundColor: '#000',
-    paddingVertical: 15,
+    paddingVertical: 18,
     borderRadius: 10,
     alignItems: 'center',
-    marginTop: 20,
+    marginTop: 12,
   },
   addToCartText: {
     color: '#fff',

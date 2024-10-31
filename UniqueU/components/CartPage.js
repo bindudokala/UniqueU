@@ -4,9 +4,9 @@ import {
   Text, 
   Image, 
   TouchableOpacity, 
-  StyleSheet, 
-  Alert, 
-  ScrollView 
+  StyleSheet,
+  SafeAreaView,
+  ScrollView, 
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
@@ -58,66 +58,71 @@ const CartPage = () => {
 
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <SafeAreaView style={styles.safeArea}>
       <View style={styles.headerContainer}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <Ionicons name="chevron-back" size={22} color="black" />
-          <Text style={styles.backButtonText}>Back</Text>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Ionicons name="chevron-back" size={24} color="black" />
         </TouchableOpacity>
         <Text style={styles.header}>Cart: {cartItems.length} Item(s)</Text>
       </View>
 
-      {cartItems.map((item, index) => (
-        <View key={index} style={styles.cartItemContainer}>
-          <Image source={{ uri: item.imageUrl }} style={styles.productImage} />
-          <View style={styles.productDetails}>
-            <Text style={styles.productName}>{item.name}</Text>
-            <Text style={styles.productPrice}>${item.price.toFixed(2)}</Text>
-            <Text style={styles.sizeLabel}>Size: {item.size || 'Free Size'}</Text>
+      <ScrollView contentContainerStyle={styles.container}>
+        {cartItems.map((item, index) => (
+          <View key={index} style={styles.cartItemContainer}>
+            <Image source={{ uri: item.imageUrl }} style={styles.productImage} />
+            <View style={styles.productDetails}>
+              <Text style={styles.productName}>{item.name}</Text>
+              <Text style={styles.productPrice}>${item.price.toFixed(2)}</Text>
+              <Text style={styles.sizeLabel}>Size: {item.size || 'Free Size'}</Text>
+            </View>
+            <TouchableOpacity onPress={() => handleRemoveItem(item)} style={styles.removeButton}>
+              <Text style={styles.removeButtonText}>Remove</Text>
+            </TouchableOpacity>
           </View>
-          <TouchableOpacity onPress={() => handleRemoveItem(item)} style={styles.removeButton}>
-            <Text style={styles.removeButtonText}>Remove</Text>
+        ))}
+
+        <View style={styles.estimatedDeliveryContainer}>
+          <Ionicons name="time-outline" size={20} color="green" />
+          <Text style={styles.estimatedDeliveryText}>
+            Est Delivery: {estimatedDelivery}
+          </Text>
+        </View>
+
+        <View style={styles.priceDetailContainer}>
+          <Text style={styles.priceDetailHeader}>Price Detail</Text>
+          <View style={styles.priceRow}>
+            <Text style={styles.priceLabel}>Order Sub-total</Text>
+            <Text style={styles.priceValue}>${subtotal.toFixed(2)}</Text>
+          </View>
+          <View style={styles.priceRow}>
+            <Text style={styles.priceLabel}>Sales Tax (5%)</Text>
+            <Text style={styles.priceValue}>${tax.toFixed(2)}</Text>
+          </View>
+          <View style={styles.priceRow}>
+            <Text style={styles.grandTotalLabel}>Grand Total</Text>
+            <Text style={styles.grandTotalValue}>${grandTotal.toFixed(2)}</Text>
+          </View>
+          <Text style={styles.taxInfo}>Inclusive of taxes</Text>
+        </View>
+
+        <View style={styles.checkoutSection}>
+          <TouchableOpacity style={styles.continueShoppingButton} onPress={handleContinueShopping}>
+            <Text style={styles.buttonText}>Continue Shopping</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.proceedCheckoutButton} onPress={() => navigation.navigate('Checkout')}>
+            <Text style={styles.buttonText}>Proceed to Checkout</Text>
           </TouchableOpacity>
         </View>
-      ))}
-
-      <View style={styles.estimatedDeliveryContainer}>
-        <Ionicons name="time-outline" size={20} color="green" />
-        <Text style={styles.estimatedDeliveryText}>
-          Est Delivery: {estimatedDelivery}
-        </Text>
-      </View>
-
-      <View style={styles.priceDetailContainer}>
-        <Text style={styles.priceDetailHeader}>Price Detail</Text>
-        <View style={styles.priceRow}>
-          <Text style={styles.priceLabel}>Order Sub-total</Text>
-          <Text style={styles.priceValue}>${subtotal.toFixed(2)}</Text>
-        </View>
-        <View style={styles.priceRow}>
-          <Text style={styles.priceLabel}>Sales Tax (5%)</Text>
-          <Text style={styles.priceValue}>${tax.toFixed(2)}</Text>
-        </View>
-        <View style={styles.priceRow}>
-          <Text style={styles.grandTotalLabel}>Grand Total</Text>
-          <Text style={styles.grandTotalValue}>${grandTotal.toFixed(2)}</Text>
-        </View>
-        <Text style={styles.taxInfo}>Inclusive of taxes</Text>
-      </View>
-
-      <View style={styles.checkoutSection}>
-        <TouchableOpacity style={styles.continueShoppingButton} onPress={handleContinueShopping}>
-          <Text style={styles.buttonText}>Continue Shopping</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.proceedCheckoutButton} onPress={() => navigation.navigate('Checkout')}>
-          <Text style={styles.buttonText}>Proceed to Checkout</Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
   emptyCartContainer: {
     flex: 1,
     backgroundColor: '#fff',
@@ -133,12 +138,11 @@ const styles = StyleSheet.create({
     paddingBottom: 100,
   },
   headerContainer: {
-    height: 50,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    position: 'relative',
-    marginBottom: 10,
+    paddingHorizontal: 15,
+    paddingVertical: 15,
+    backgroundColor: '#fff',
   },
   emptyCartContinueShoppingButton: {
     backgroundColor: '#000', 
@@ -158,27 +162,11 @@ const styles = StyleSheet.create({
       fontSize: 18,
       fontWeight: 'bold',
   },
-  emptyCartBackButton: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      marginTop: 10,
-      alignSelf: 'center',
-  },
-  backButton: {
-    position: 'absolute',
-    left: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  backButtonText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: 'black',
-  },
   header: {
-    fontSize: 18,
+    fontSize: 24,
     fontWeight: 'bold',
     textAlign: 'center',
+    flex: 1,
   },
   cartItemContainer: {
     flexDirection: 'row',

@@ -37,33 +37,20 @@ const RootNavigator = () => {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <View style={{ flex: 1 }}>
         <Header />
-        <Stack.Navigator
-          initialRouteName="Home"
-          screenOptions={{ headerShown: false }}
-        >
+        <Stack.Navigator initialRouteName="Home" screenOptions={{ headerShown: false }}>
+
           <Stack.Screen name="Home" component={HomePage} />
           <Stack.Screen name="Login" component={LoginPage} />
           <Stack.Screen name="Signup" component={SignupPage} />
           
-        <Stack.Screen 
-          name="CategoryProducts" 
-          component={CategoryProductsPage} 
-          options={{ title: 'Category Products' }} 
-        />
+          <Stack.Screen name="CategoryProducts" component={CategoryProductsPage} options={{ title: 'Category Products' }} />
 
-        <Stack.Screen 
-          name="ProductDetails" 
-          component={ProductDetailsPage} 
-          options={{ title: 'Product Details' }} 
-        />
+          <Stack.Screen name="ProductDetails" component={ProductDetailsPage} options={{ title: 'Product Details' }} />
 
-        <Stack.Screen name="Cart" component={CartPage} />
+          <Stack.Screen name="Cart" component={CartPage} />
 
-        <Stack.Screen 
-          name="Checkout" 
-          component={CheckoutPage} 
-          options={{ title: 'Checkout' }} 
-        />
+          <Stack.Screen name="Checkout" component={CheckoutPage} options={{ title: 'Checkout' }} />
+
         </Stack.Navigator>
       </View>
     </GestureHandlerRootView>
