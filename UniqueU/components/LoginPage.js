@@ -23,10 +23,10 @@ const LoginPage = () => {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      console.log('Logged in user:', user);
+      // console.log('Logged in user:', user);
       await SecureStore.setItemAsync('authToken', user.uid);
 
-      Alert.alert('Success', 'Login successful!');
+      // Alert.alert('Success', 'Login successful!');
       navigation.replace('Home');
     } catch (error) {
       console.log('Login error:', error);

@@ -6,11 +6,11 @@ import SignupPage from '../components/SignupPage';
 import HomePage from '../components/HomePage';
 import Header from '../components/Header';
 import { View, Text, StyleSheet } from 'react-native';
-import { AuthProvider, useAuth } from '../context/AuthContext'; 
+import { AuthProvider, useAuth } from '../contexts/AuthContext'; 
 import CategoryProductsPage from '../components/CategoryProductsPage'; 
 import ProductDetailsPage from '../components/ProductDetailsPage';
 import CartPage from '../components/CartPage';
-import { CartProvider } from '../components/CartContext';
+import { CartProvider } from '../contexts/CartContext';
 import CheckoutPage from '../components/CheckoutPage';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
@@ -37,7 +37,7 @@ const RootNavigator = () => {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <View style={{ flex: 1 }}>
         <Header />
-        <Stack.Navigator initialRouteName="Home" screenOptions={{ headerShown: false }}>
+        <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
 
           <Stack.Screen name="Home" component={HomePage} />
           <Stack.Screen name="Login" component={LoginPage} />

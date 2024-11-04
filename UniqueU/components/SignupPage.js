@@ -28,7 +28,7 @@ const SignupPage = () => {
 
       Alert.alert('Success', 'Signup successful!');
       navigation.replace('Home'); 
-      console.log('User signed up:', user);
+      // console.log('User signed up:', user);
     } catch (error) {
       console.error('Signup error:', error);
       Alert.alert('Error', error.message);

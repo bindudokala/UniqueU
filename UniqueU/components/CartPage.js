@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
-import { useCart } from '../components/CartContext';
+import { useCart } from '../contexts/CartContext';
 
 // Helper function to get estimated delivery date
 const getEstimatedDeliveryDate = () => {

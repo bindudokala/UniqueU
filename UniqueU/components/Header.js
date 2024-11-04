@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { FontAwesome } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
-import { useCart } from '../components/CartContext';
+import { useCart } from '../contexts/CartContext';
 
 const Header = () => {
   const navigation = useNavigation();

@@ -12,11 +12,15 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
-import { useCart } from '../components/CartContext';
+import { useCart } from '../contexts/CartContext';
+import { db } from '../config/firebaseConfig';
+import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
+import { useAuth } from '../contexts/AuthContext';
 
 const CheckoutPage = () => {
   const navigation = useNavigation();
   const { cartItems, clearCart } = useCart();
+  const { user } = useAuth();
   const subtotal = cartItems.reduce((total, item) => total + item.price, 0);
   const tax = subtotal * 0.05;
   const grandTotal = subtotal + tax;
@@ -25,6 +29,32 @@ const CheckoutPage = () => {
   const [expiryDate, setExpiryDate] = useState('');
   const [cvv, setCvv] = useState('');
   const [nameOnCard, setNameOnCard] = useState('');
+
+  const handleOrderCreation = async () => {
+    const orderData = {
+      uid: user.uid,
+      email: user.email,
+      items: cartItems.map(item => ({
+        name: item.name,
+        size: item.size || 'Free Size',
+        price: item.price,
+      })),
+      subtotal: subtotal.toFixed(2),
+      tax: tax.toFixed(2),
+      total: grandTotal.toFixed(2),
+      createdAt: serverTimestamp(),
+    };
+
+    try {
+      await addDoc(collection(db, 'orders'), orderData);
+      Alert.alert('Order Created', 'Your order has been successfully created!');
+      clearCart();
+      navigation.navigate('Home');
+    } catch (error) {
+      console.error('Error creating order:', error);
+      Alert.alert('Order Failed', 'Failed to create your order. Please try again.');
+    }
+  };
 
   const handlePayment = () => {
     if (cardNumber.length !== 10 || !/^\d+$/.test(cardNumber)) {
@@ -43,10 +73,11 @@ const CheckoutPage = () => {
     }
 
     Alert.alert('Payment Successful', 'Thank you for your purchase!', [
-      { text: 'OK', onPress: () => {
-        clearCart();
-        navigation.navigate('Home');
-      }},
+      { text: 'OK', 
+        onPress: handleOrderCreation
+        // clearCart();
+        // navigation.navigate('Home');
+      },
     ]);
   };
 
