@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
+import axios from 'axios';
 import { useCart } from '../contexts/CartContext';
 import { db } from '../config/firebaseConfig';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
@@ -46,13 +47,23 @@ const CheckoutPage = () => {
     };
 
     try {
-      await addDoc(collection(db, 'orders'), orderData);
-      Alert.alert('Order Created', 'Your order has been successfully created!');
+      const docRef = await addDoc(collection(db, 'orders'), orderData);
+
+      // Call the email-sending endpoint
+      await axios.post('https://unique-u.vercel.app/api/send-email', {
+        email: user.email,
+        orderId: docRef.id,
+        orderDetails: {
+          total: grandTotal.toFixed(2)
+        }
+      });
+
+      Alert.alert('Order Created', 'Your order has been successfully created, and a confirmation email has been sent!');
       clearCart();
       navigation.navigate('Home');
     } catch (error) {
-      console.error('Error creating order:', error);
-      Alert.alert('Order Failed', 'Failed to create your order. Please try again.');
+      console.error('Error creating order or sending email:', error);
+      Alert.alert('Order Failed', 'Failed to create your order or send email. Please try again.');
     }
   };
 
