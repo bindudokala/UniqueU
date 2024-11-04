@@ -1,0 +1,10 @@
+{
+    "name": "uniqueu-vercel-functions",
+    "version": "1.0.0",
+    "main": "api/send-email.js",
+    "license": "MIT",
+    "dependencies": {
+      "@sendgrid/mail": "^8.1.4"
+    }
+  }
+  
