@@ -5,6 +5,7 @@ if (!process.env.SENDGRID_API_KEY) {
 }
 
 sendGridMail.setApiKey(process.env.SENDGRID_API_KEY);
+console.log("SENDGRID_API_KEY:", process.env.SENDGRID_API_KEY);
 
 export default async (req, res) => {
   if (req.method !== 'POST') {
@@ -15,7 +16,7 @@ export default async (req, res) => {
 
   const msg = {
     to: email,
-    from: 'uniqueu.app@gmail.com', // Ensure this email is verified in SendGrid
+    from: 'uniqueu.app@gmail.com',
     subject: 'Order Confirmation',
     text: `Thank you for your order! Order ID: ${orderId}. Total: $${orderDetails.total}`,
     html: `<p>Thank you for your order!</p><p>Order ID: ${orderId}</p><p>Total: $${orderDetails.total}</p>`,
