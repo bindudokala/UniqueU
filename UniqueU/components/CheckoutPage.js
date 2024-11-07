@@ -60,7 +60,8 @@ const CheckoutPage = () => {
           items: cartItems.map(item => ({
             name: item.name,
             size: item.size || 'Free Size',
-            price: `${item.price.toFixed(2)}`
+            price: `${item.price.toFixed(2)}`,
+            imageUrl: item.imageUrl || 'https://via.placeholder.com/80x80?text=Image+Not+Available'
           })),
           subtotal: `${subtotal.toFixed(2)}`,
           tax: `${tax.toFixed(2)}`,

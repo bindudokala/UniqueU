@@ -20,7 +20,7 @@ export default async (req, res) => {
   const generateOrderItemsHtml = (items) => {
     return items.map(item => `
       <div style="display: flex; align-items: center; border-bottom: 1px solid #e0e0e0; padding-bottom: 15px; margin-bottom: 15px;">
-        <img src="${item.image || 'default-image-url.jpg'}" alt="${item.name}" style="width: 80px; height: auto; border-radius: 5px; margin-right: 15px;">
+        <img src="${item.imageUrl || 'default-image-url.jpg'}" alt="${item.name}" style="width: 80px; height: auto; border-radius: 5px; margin-right: 15px;">
         <div>
           <p style="margin: 0; font-size: 16px; font-weight: bold;">${item.name}</p>
           <p style="margin: 5px 0; color: #888;">Size: ${item.size}</p>
@@ -56,9 +56,9 @@ export default async (req, res) => {
 
         <div style="margin-top: 20px; padding: 15px; background-color: #f9f9f9; border-radius: 5px;">
           <h4>Price Details</h4>
-          <p><strong>Order Sub-total:</strong> ${orderDetails.subtotal}</p>
-          <p><strong>Sales Tax (5%):</strong> ${orderDetails.tax}</p>
-          <h3 style="margin-top: 10px; font-weight: bold;">Grand Total: ${orderDetails.total}</h3>
+          <p><strong>Order Sub-total:</strong> $${orderDetails.subtotal}</p>
+          <p><strong>Sales Tax (5%):</strong> $${orderDetails.tax}</p>
+          <h3 style="margin-top: 10px; font-weight: bold;">Grand Total: $${orderDetails.total}</h3>
         </div>
         
         <p style="font-size: 16px; margin-top: 20px;">We hope to deliver your order by the estimated date. Thank you for shopping with us!</p>
