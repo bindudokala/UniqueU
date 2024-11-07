@@ -12,7 +12,6 @@ import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { useCart } from '../contexts/CartContext';
 
-// Helper function to get estimated delivery date
 const getEstimatedDeliveryDate = () => {
   const today = new Date();
   const deliveryDate = new Date(today);
@@ -24,7 +23,7 @@ const getEstimatedDeliveryDate = () => {
 
 const CartPage = () => {
   const navigation = useNavigation();
-  const { cartItems, removeItemFromCart } = useCart(); // Get cart state and remove function
+  const { cartItems, removeItemFromCart } = useCart();
   const estimatedDelivery = getEstimatedDeliveryDate();
 
   const subtotal = cartItems.reduce((total, item) => total + item.price, 0);
@@ -72,7 +71,7 @@ const CartPage = () => {
             <Image source={{ uri: item.imageUrl }} style={styles.productImage} />
             <View style={styles.productDetails}>
               <Text style={styles.productName}>{item.name}</Text>
-              <Text style={styles.productPrice}>${item.price.toFixed(2)}</Text>
+              <Text style={styles.productPrice}>Price: ${item.price.toFixed(2)}</Text>
               <Text style={styles.sizeLabel}>Size: {item.size || 'Free Size'}</Text>
             </View>
             <TouchableOpacity onPress={() => handleRemoveItem(item)} style={styles.removeButton}>

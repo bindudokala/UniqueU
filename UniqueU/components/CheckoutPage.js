@@ -71,9 +71,10 @@ const CheckoutPage = () => {
         }
       });
 
-      Alert.alert('Order Created', 'Your order has been successfully created, and a confirmation email has been sent!');
+      // Alert.alert('Order Created', 'Your order has been successfully created, and a confirmation email has been sent!');
+      navigation.navigate('OrderConfirmation');
       clearCart();
-      navigation.navigate('Home');
+      // navigation.navigate('Home');
     } catch (error) {
       console.error('Error creating order or sending email:', error);
       Alert.alert('Order Failed', 'Failed to create your order or send email. Please try again.');
