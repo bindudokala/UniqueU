@@ -16,6 +16,19 @@ export default async (req, res) => {
   
   const orderDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
   const estimatedDeliveryDate = new Date(orderDetails.estimatedDelivery).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+  
+  const generateOrderItemsHtml = (items) => {
+    return items.map(item => `
+      <div style="display: flex; align-items: center; border-bottom: 1px solid #e0e0e0; padding-bottom: 15px; margin-bottom: 15px;">
+        <img src="${item.image || 'default-image-url.jpg'}" alt="${item.name}" style="width: 80px; height: auto; border-radius: 5px; margin-right: 15px;">
+        <div>
+          <p style="margin: 0; font-size: 16px; font-weight: bold;">${item.name}</p>
+          <p style="margin: 5px 0; color: #888;">Size: ${item.size}</p>
+          <p style="margin: 5px 0; font-size: 16px; color: #333;"><strong>$${item.price}</strong></p>
+        </div>
+      </div>
+    `).join('');
+  };
 
   const msg = {
     to: email,
@@ -35,22 +48,17 @@ export default async (req, res) => {
         </div>
         
         <div style="padding: 15px; border: 1px solid #e0e0e0; border-radius: 5px; margin-top: 20px;">
-          <h4 style="margin-bottom: 15px;">Items you have purchased</h4>
-          <div style="display: flex; align-items: center; border-bottom: 1px solid #e0e0e0; padding-bottom: 15px; margin-bottom: 15px;">
-            <img src="${orderDetails.itemImage}" alt="${orderDetails.itemName}" style="width: 80px; height: auto; border-radius: 5px; margin-right: 15px;">
-            <div>
-              <p style="margin: 0; font-size: 16px; font-weight: bold;">${orderDetails.itemName}</p>
-              <p style="margin: 5px 0; color: #888;">Size: ${orderDetails.size}</p>
-              <p style="margin: 5px 0; font-size: 16px; color: #333;"><strong>$${orderDetails.price}</strong></p>
-            </div>
+          <h4>Items you have purchased</h4>
+          <div style="padding: 15px; border: 1px solid #e0e0e0; border-radius: 5px; margin-top: 20px;">
+            ${generateOrderItemsHtml(orderDetails.items)}
           </div>
         </div>
 
         <div style="margin-top: 20px; padding: 15px; background-color: #f9f9f9; border-radius: 5px;">
           <h4>Price Details</h4>
-          <p><strong>Order Sub-total:</strong> $${orderDetails.subTotal}</p>
-          <p><strong>Sales Tax (5%):</strong> $${orderDetails.tax}</p>
-          <h3 style="margin-top: 10px; font-weight: bold;">Grand Total: $${orderDetails.total}</h3>
+          <p><strong>Order Sub-total:</strong> ${orderDetails.subtotal}</p>
+          <p><strong>Sales Tax (5%):</strong> ${orderDetails.tax}</p>
+          <h3 style="margin-top: 10px; font-weight: bold;">Grand Total: ${orderDetails.total}</h3>
         </div>
         
         <p style="font-size: 16px; margin-top: 20px;">We hope to deliver your order by the estimated date. Thank you for shopping with us!</p>

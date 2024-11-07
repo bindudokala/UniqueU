@@ -60,11 +60,11 @@ const CheckoutPage = () => {
           items: cartItems.map(item => ({
             name: item.name,
             size: item.size || 'Free Size',
-            price: `$${item.price.toFixed(2)}`
+            price: `${item.price.toFixed(2)}`
           })),
-          subtotal: `$${subtotal.toFixed(2)}`,
-          tax: `$${tax.toFixed(2)}`,
-          total: `$${grandTotal.toFixed(2)}`,
+          subtotal: `${subtotal.toFixed(2)}`,
+          tax: `${tax.toFixed(2)}`,
+          total: `${grandTotal.toFixed(2)}`,
           orderDate: orderDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }),
           estimatedDelivery: estimatedDeliveryDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
         }
