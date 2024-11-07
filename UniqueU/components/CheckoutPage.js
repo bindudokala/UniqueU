@@ -32,13 +32,17 @@ const CheckoutPage = () => {
   const [nameOnCard, setNameOnCard] = useState('');
 
   const handleOrderCreation = async () => {
+    const orderDate = new Date();
+    const estimatedDeliveryDate = new Date();
+    estimatedDeliveryDate.setDate(orderDate.getDate() + 7);
+
     const orderData = {
       uid: user.uid,
       email: user.email,
       items: cartItems.map(item => ({
         name: item.name,
         size: item.size || 'Free Size',
-        price: item.price,
+        price: item.price.toFixed(2),
       })),
       subtotal: subtotal.toFixed(2),
       tax: tax.toFixed(2),
@@ -49,12 +53,20 @@ const CheckoutPage = () => {
     try {
       const docRef = await addDoc(collection(db, 'orders'), orderData);
 
-      // Call the email-sending endpoint
       await axios.post('https://unique-u.vercel.app/api/send-email', {
         email: user.email,
         orderId: docRef.id,
         orderDetails: {
-          total: grandTotal.toFixed(2)
+          items: cartItems.map(item => ({
+            name: item.name,
+            size: item.size || 'Free Size',
+            price: `$${item.price.toFixed(2)}`
+          })),
+          subtotal: `$${subtotal.toFixed(2)}`,
+          tax: `$${tax.toFixed(2)}`,
+          total: `$${grandTotal.toFixed(2)}`,
+          orderDate: orderDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }),
+          estimatedDelivery: estimatedDeliveryDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
         }
       });
 
@@ -84,11 +96,7 @@ const CheckoutPage = () => {
     }
 
     Alert.alert('Payment Successful', 'Thank you for your purchase!', [
-      { text: 'OK', 
-        onPress: handleOrderCreation
-        // clearCart();
-        // navigation.navigate('Home');
-      },
+      { text: 'OK', onPress: handleOrderCreation },
     ]);
   };
 

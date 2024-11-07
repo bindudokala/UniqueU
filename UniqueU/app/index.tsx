@@ -37,7 +37,7 @@ const RootNavigator = () => {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <View style={{ flex: 1 }}>
         <Header />
-        <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
+        <Stack.Navigator initialRouteName="Home" screenOptions={{ headerShown: false }}>
 
           <Stack.Screen name="Home" component={HomePage} />
           <Stack.Screen name="Login" component={LoginPage} />

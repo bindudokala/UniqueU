@@ -2,20 +2,30 @@ import React, { useEffect, useState } from 'react';
 import { 
   View, 
   Text, 
-  FlatList, 
   TouchableOpacity, 
   StyleSheet, 
   ActivityIndicator, 
-  Image
+  Image, 
+  ScrollView 
 } from 'react-native';
+import Swiper from 'react-native-swiper';
 import { fetchParentDocId, fetchCategories } from '../services/firestoreService';
 import { auth } from '../config/firebaseConfig';
 
 const HomePage = ({ navigation }) => {
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState([
+    { name: 'Sarees', image: 'https://www.sacredweaves.com/cdn/shop/articles/Blog_banner-min_1600x.jpg?v=1625036042' },
+    { name: 'Kurtis', image: 'https://cdn.shopify.com/s/files/1/0341/4805/7228/files/banner_fcfc7c2c-588e-4248-9e9f-54040ce9c1b7.jpg?v=1670905659' },
+    { name: 'Lehengas', image: 'https://www.shreekama.com/cdn/shop/articles/banner-image-for-a-blog-post-with-title-long-vs-sh-JsAVVIFBTleP97LNfRp_4w-kLOYJUyLQTilwhDyCowTDg.jpg?v=1717133215' }
+  ]);
   const [loading, setLoading] = useState(true);
   const [parentDocId, setParentDocId] = useState(null);
   const [error, setError] = useState(null); 
+  const [banners, setBanners] = useState([
+    { uri: 'https://i.pinimg.com/736x/d0/78/70/d078705c172a131d88c67bd19986172d.jpg' },
+    { uri: 'https://m.media-amazon.com/images/S/stores-image-uploads-eu-prod/2/AmazonStores/A21TJRUUN4KGV/05e6761286e62648b6aba8335fc4f99a.w1920.h597.jpg' },
+    { uri: 'https://hariomexport.com/wp-content/uploads/2018/06/Roopsangam-Web-Banner03.jpg-1118x486.jpg' }
+  ]);
 
   useEffect(() => {
     const loadCategories = async () => {
@@ -31,7 +41,12 @@ const HomePage = ({ navigation }) => {
         setParentDocId(docId);
 
         const categoryList = await fetchCategories(docId); 
-        setCategories(categoryList);
+        setCategories((prevCategories) =>
+          prevCategories.map((cat, index) => ({
+            ...cat,
+            name: categoryList[index] || cat.name,
+          }))
+        );
       } catch (err) {
         console.error('Error fetching categories:', err);
         setError('Failed to load categories. Please try again.');
@@ -45,9 +60,15 @@ const HomePage = ({ navigation }) => {
 
   const handleCategoryPress = (category) => {
     if (parentDocId) {
-      navigation.navigate('CategoryProducts', { parentDocId, category });
+      navigation.navigate('CategoryProducts', { parentDocId, category: category.name });
     }
   };
+
+  const renderBannerItem = (banner) => (
+    <View key={banner.uri} style={styles.slide}>
+      <Image source={{ uri: banner.uri }} style={styles.banner} />
+    </View>
+  );
 
   if (loading) {
     return (
@@ -73,33 +94,34 @@ const HomePage = ({ navigation }) => {
   }
 
   return (
-    <View style={styles.container}>
-      {/* Banner Image */}
-      <Text style={styles.welcomeText}>Welcome to UniqueU</Text>
-      <Image
-        source={{ uri: 'https://i.pinimg.com/736x/d0/78/70/d078705c172a131d88c67bd19986172d.jpg' }} 
-        style={styles.banner}
-      />
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
+      {/* Sliding Banner */}
+      <Swiper autoplay={true} loop={true}  style={styles.swiper} showsPagination={false}>
+        {banners.map(renderBannerItem)}
+      </Swiper>
 
-      {/* Welcome Section */}
-      <View style={styles.welcomeContainer}>
-        <Text style={styles.subtitle}>Select a category to get started</Text>
-      </View>
+      <Text style={styles.sectionTitle}>Shop By Category</Text>
 
-      {/* Category List */}
-      <FlatList
-        data={categories}
-        keyExtractor={(item) => item}
-        renderItem={({ item }) => (
+      {/* Category List - Static View with TouchableOpacity items */}
+      <View style={styles.categoriesContainer}>
+        {categories.map((category) => (
           <TouchableOpacity
+            key={category.name}
             style={styles.categoryCard}
-            onPress={() => handleCategoryPress(item)}
+            onPress={() => handleCategoryPress(category)}
+            activeOpacity={0.8}
           >
-            <Text style={styles.categoryText}>{item}</Text>
+            <Image
+              source={{ uri: category.image }}
+              style={styles.categoryImage}
+            />
+            <View style={styles.textOverlay}>
+              <Text style={styles.categoryText}>{category.name}</Text>
+            </View>
           </TouchableOpacity>
-        )}
-      />
-    </View>
+        ))}
+      </View>
+    </ScrollView>
   );
 };
 
@@ -109,47 +131,71 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     padding: 20,
   },
+  scrollContainer: {
+    padding: 20,
+    backgroundColor: '#FFFFFF',
+  },
+  swiper: {
+    height: 200,
+    marginBottom: 20,
+  },
+  slide: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  sectionTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginVertical: 20,
+  },
   banner: {
     width: '100%',
-
-    paddingVertical: 110,
+    height: 200,
     borderRadius: 10,
-    marginBottom: 20,
     resizeMode: 'cover',
   },
-  welcomeContainer: {
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  welcomeText: {
-    fontSize: 24,
-    fontWeight: '700',
-    color: '#000000',
-    textAlign: 'center',
-    marginBottom: 15,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: '#666666',
-    textAlign: 'center',
+  categoriesContainer: {
+    flexDirection: 'column',
+    cursor: 'pointer',
   },
   categoryCard: {
-    backgroundColor: '#000000',
-    padding: 15,
-    marginVertical: 10,
-    borderRadius: 10,
-    alignItems: 'center',
     width: '100%',
+    height: 200,
+    backgroundColor: '#FFF',
+    borderRadius: 10,
+    marginBottom: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 5,
+    cursor: 'pointer',
+  },
+  categoryImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 10,
+  },
+  textOverlay: {
+    position: 'absolute',
+    bottom: 20, 
+    paddingHorizontal: 20,
+    paddingVertical: 6,
+    width: 150,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   categoryText: {
     color: '#FFFFFF',
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: 'bold',
+    textTransform: 'uppercase',
   },
   errorText: {
     color: 'red',
