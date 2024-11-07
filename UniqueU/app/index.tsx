@@ -13,6 +13,7 @@ import CartPage from '../components/CartPage';
 import { CartProvider } from '../contexts/CartContext';
 import CheckoutPage from '../components/CheckoutPage';
 import OrderConfirmation from '../components/OrderConfirmation';
+import UserProfile from '../components/UserProfile';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 const Stack = createStackNavigator();
@@ -53,6 +54,8 @@ const RootNavigator = () => {
           <Stack.Screen name="Checkout" component={CheckoutPage} options={{ title: 'Checkout' }} />
 
           <Stack.Screen name="OrderConfirmation" component={OrderConfirmation} options={{ title: 'OrderConfirmation' }} />
+
+          <Stack.Screen name="UserProfile" component={UserProfile} options={{ title: 'UserProfile' }} />
 
         </Stack.Navigator>
       </View>

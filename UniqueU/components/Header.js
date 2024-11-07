@@ -26,7 +26,7 @@ const Header = () => {
   };
 
   const handleProfilePress = () => {
-    navigation.navigate('Profile');
+    navigation.navigate('UserProfile');
   };
 
   return (

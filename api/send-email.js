@@ -21,10 +21,10 @@ export default async (req, res) => {
     return items.map((item, index) => `
       <div style="display: flex; align-items: center; ${index !== orderDetails.items.length - 1 ? 'border-bottom: 1px solid #e0e0e0; padding-bottom: 15px; margin-bottom: 15px;' : 'padding-bottom: 15px;'}">
         <img src="${item.imageUrl || 'default-image-url.jpg'}" alt="${item.name}" style="width: 80px; height: auto; border-radius: 5px; margin-right: 15px;">
-        <div style="display: flex; flex-direction: column; justify-content: center;">
+        <div style="display: flex; flex-direction: row; justify-content: center;">
           <p style="margin: 0; font-size: 16px; font-weight: bold;">${item.name}</p>
-          <p style="margin: 5px 0; color: #888;">Size: ${item.size}</p>
-          <p style="margin: 5px 0; font-size: 16px; color: #333;"><strong>$${item.price}</strong></p>
+          <p style="margin: 5px 0; font-size: 16px; color: #333;">Price: <strong>$${item.price}</strong></p>
+          <p style="margin: 5px 0; color: #888;">Size: <strong>${item.size}</strong></p>
         </div>
       </div>
     `).join('');
