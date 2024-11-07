@@ -17,7 +17,7 @@ export default async (req, res) => {
   const orderDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
   const estimatedDeliveryDate = new Date(orderDetails.estimatedDelivery).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
   
-  const generateOrderItemsHtml = (items) => {
+  const generateOrderItemsHtml = (items, index) => {
     return items.map(item => `
        <div style="display: flex; align-items: center; ${index !== orderDetails.items.length - 1 ? 'border-bottom: 1px solid #e0e0e0; padding-bottom: 15px; margin-bottom: 15px;' : 'padding-bottom: 15px;'}">
         <img src="${item.imageUrl || 'default-image-url.jpg'}" alt="${item.name}" style="width: 80px; height: auto; border-radius: 5px; margin-right: 15px;">

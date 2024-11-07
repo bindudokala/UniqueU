@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
-    justifyContent: 'center', // Centers the content vertically
+    justifyContent: 'center',
     alignItems: 'center',
   },
   iconContainer: {
