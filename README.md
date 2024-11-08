@@ -56,6 +56,32 @@ The UniqueU app offers an easy-to-use interface for shopping enthusiasts. Users 
 - Cart dynamically updates based on the product added from the **Product Details Page**.
 - Displays a relevant message if the cart is empty.
 
+### 8. **Checkout Page**
+- Allows users to review their order before proceeding.
+- Displays product details along with the total order amount (inclusive of taxes).
+- Requires users to enter payment information for order processing.
+- Validates payment details (e.g., card number and CVV format) before allowing checkout.
+- On successful payment, it triggers the order creation.
+
+### 9. **Order Confirmation Page**
+- Displayed after a successful checkout.
+- Shows a confirmation message with a zoom-in animation for the tick mark, changing from green to black for visual feedback.
+- Automatically navigates back to the home page after a short delay, or the user can click a button to return manually.
+
+### 10. **Email Notifications**
+- Sends an order confirmation email to the user upon successful checkout.
+- Email includes order details, estimated delivery date, and a list of purchased items.
+- Implemented with Vercel Serverless Functions and SendGrid for email delivery.
+
+### 11. **User Profile Page**
+- Displays the logged-in user's **Username, Email**, and **Order History**.
+- **Order History** shows each order’s details, including items purchased, order ID, date, and total amount.
+- Includes sections for **Order Details** and **Address Management**:
+  - Tapping on **Order Details** allows users to view all past orders.
+  - Tapping on **Addresses** allows users to manage delivery addresses (feature can be extended in the future).
+- **Logout Button** allows users to securely log out of the app.
+
+
 ## **Technology Stack**
 
 - **Frontend**: React Native, Expo
@@ -64,5 +90,5 @@ The UniqueU app offers an easy-to-use interface for shopping enthusiasts. Users 
 - **State Management**: React Hooks (`useState`, `useEffect`, `useContext`)
 - **Icons**: Expo Vector Icons (`Ionicons`)
 - **Persistence**: AsyncStorage for user sessions
-
+- **Email Service**: SendGrid (for sending order confirmation emails)
 
