@@ -37,7 +37,7 @@ export default async (req, res) => {
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #333;">
         <h2 style="text-align: center; color: #000;">Thank you for your order!</h2>
-        <p style="font-size: 16px;">Hi,</p>
+        <p style="font-size: 16px;">Hi ${username},</p>
         <p style="font-size: 16px;">Your order has been placed successfully.</p>
         
         <div style="background-color: #f3f4f6; padding: 15px; border-radius: 5px; margin: 20px 0;">

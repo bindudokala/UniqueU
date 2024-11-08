@@ -21,7 +21,7 @@ import { useAuth } from '../contexts/AuthContext';
 const CheckoutPage = () => {
   const navigation = useNavigation();
   const { cartItems, clearCart } = useCart();
-  const { user } = useAuth();
+  const { user, userData } = useAuth();
   const subtotal = cartItems.reduce((total, item) => total + item.price, 0);
   const tax = subtotal * 0.05;
   const grandTotal = subtotal + tax;
@@ -56,6 +56,7 @@ const CheckoutPage = () => {
       await axios.post('https://unique-u.vercel.app/api/send-email', {
         email: user.email,
         orderId: docRef.id,
+        username: userData?.username || 'Dear',
         orderDetails: {
           items: cartItems.map(item => ({
             name: item.name,

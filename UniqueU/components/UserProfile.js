@@ -50,8 +50,8 @@ const UserProfile = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.header}>User Profile</Text>
-      <Text style={styles.label}>Username: {userData.username || 'User'}</Text>
-      <Text style={styles.label}>Email: {user.email}</Text>
+      <Text style={styles.label}>Username: {userData ? userData.username : 'Loading...'}</Text>
+      <Text style={styles.label}>Email: {user ? user.email : 'Loading...'}</Text>
       <Text style={styles.sectionHeader}>Order History</Text>
 
       <FlatList
@@ -118,14 +118,15 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   logoutButton: {
-    paddingVertical: 15,
-    borderRadius: 10,
+    backgroundColor: '#000',
+    paddingVertical: 20,
+    borderRadius: 15,
     alignItems: 'center',
     marginTop: 20,
   },
   logoutText: {
     color: '#FFF',
-    fontSize: 18,
+    fontSize: 22,
     fontWeight: 'bold',
   },
   noUserContainer: {
