@@ -12,7 +12,7 @@ export default async (req, res) => {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { email, orderId, orderDetails } = req.body;
+  const { email, orderId, username, orderDetails } = req.body;
   
   const orderDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
   const estimatedDeliveryDate = new Date(orderDetails.estimatedDelivery).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
