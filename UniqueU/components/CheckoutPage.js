@@ -97,9 +97,8 @@ const CheckoutPage = () => {
       return;
     }
 
-    Alert.alert('Payment Successful', 'Thank you for your purchase!', [
-      { text: 'OK', onPress: handleOrderCreation },
-    ]);
+    // Call handleOrderCreation after successful payment validation
+    handleOrderCreation();
   };
 
   return (

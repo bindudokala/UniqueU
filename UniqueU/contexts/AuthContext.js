@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useState, useContext } from 'react';
-import { onAuthStateChanged } from 'firebase/auth';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth, db } from '../config/firebaseConfig';
 import { doc, getDoc } from 'firebase/firestore'; 
 import { useNavigation } from '@react-navigation/native';
@@ -13,19 +13,32 @@ export const AuthProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
   const navigation = useNavigation(); 
 
+  const logout = async () => {
+    try {
+      await signOut(auth);
+      setUser(null);
+      setUserData(null);
+      navigation.navigate('Login');
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
+  };
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      setUser(currentUser); 
       setIsLoading(false); 
 
     if (currentUser) {
+      setUser(currentUser); 
+
       const userDocRef = doc(db, 'users', currentUser.uid);
       const userDoc = await getDoc(userDocRef);
       if (userDoc.exists()) {
         setUserData(userDoc.data());
-        console.log("Auth Context Output", userDoc);
+        // console.log("Auth Context Output", userDoc);
       }
     } else {
+      setUser(null);
       setUserData(null);
       navigation.navigate('Login');
     }
@@ -36,7 +49,7 @@ export const AuthProvider = ({ children }) => {
   }, [navigation]);
 
   return (
-    <AuthContext.Provider value={{ user, userData, isLoading }}>
+    <AuthContext.Provider value={{ user, userData, isLoading, logout }}>
       {children}
     </AuthContext.Provider>
   );

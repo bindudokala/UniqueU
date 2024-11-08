@@ -1,95 +1,155 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Alert } from 'react-native';
 import { useAuth } from '../contexts/AuthContext';
+import { db } from '../config/firebaseConfig';
+import { collection, query, where, getDocs } from 'firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
 
 const UserProfile = () => {
-  const { user, logout } = useAuth();
+  const { user, userData, logout } = useAuth();
+  const [orderHistory, setOrderHistory] = useState([]);
   const navigation = useNavigation();
 
-  const orderHistory = [
-    { id: '1', date: 'Oct 1, 2024', status: 'Delivered', total: '$35.00' },
-    { id: '2', date: 'Oct 15, 2024', status: 'Processing', total: '$25.00' },
-  ];
+  useEffect(() => {
+    const fetchOrderHistory = async () => {
+      if (!user) return;
+
+      try {
+        const ordersRef = collection(db, 'orders');
+        const q = query(ordersRef, where('uid', '==', user.uid));
+        const querySnapshot = await getDocs(q);
+
+        const orders = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setOrderHistory(orders);
+      } catch (error) {
+        console.error('Error fetching order history:', error);
+        Alert.alert('Error', 'Could not fetch order history');
+      }
+    };
+
+    fetchOrderHistory();
+  }, [user]);
+
+  if (!user) {
+    return (
+      <View style={styles.noUserContainer}>
+        <Text style={styles.noUserText}>No user logged in...</Text>
+        <TouchableOpacity 
+          style={styles.loginButton} 
+          onPress={() => navigation.navigate('Login')}
+        >
+          <Text style={styles.loginButtonText}>Go to Login</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.header}>Profile</Text>
+    <View style={styles.container}>
+      <Text style={styles.header}>User Profile</Text>
+      <Text style={styles.label}>Username: {userData.username || 'User'}</Text>
+      <Text style={styles.label}>Email: {user.email}</Text>
+      <Text style={styles.sectionHeader}>Order History</Text>
 
-      <View style={styles.section}>
-        <Text style={styles.label}>Name:</Text>
-        <Text style={styles.info}>{user.name || 'Bindu Dokala'}</Text>
-      </View>
-
-      <View style={styles.section}>
-        <Text style={styles.label}>Email:</Text>
-        <Text style={styles.info}>{user.email}</Text>
-      </View>
-
-      <View style={styles.section}>
-        <Text style={styles.label}>Delivery Address:</Text>
-        <Text style={styles.info}>{user.address || 'No address provided'}</Text>
-      </View>
-
-      <View style={styles.section}>
-        <Text style={styles.label}>Order History:</Text>
-        {orderHistory.map(order => (
-          <View key={order.id} style={styles.order}>
-            <Text style={styles.orderText}>Order ID: {order.id}</Text>
-            <Text style={styles.orderText}>Date: {order.date}</Text>
-            <Text style={styles.orderText}>Status: {order.status}</Text>
-            <Text style={styles.orderText}>Total: {order.total}</Text>
+      <FlatList
+        data={orderHistory}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <View style={styles.orderContainer}>
+            <Text style={styles.orderText}>Order ID: {item.id}</Text>
+            <Text style={styles.orderText}>Date: {item.createdAt?.toDate().toLocaleDateString()}</Text>
+            <Text style={styles.orderText}>Total: ${item.total}</Text>
+            <FlatList
+              data={item.items}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({ item }) => (
+                <View style={styles.itemContainer}>
+                  <Text>{item.name} - ${item.price}</Text>
+                  <Text>Size: {item.size}</Text>
+                </View>
+              )}
+            />
           </View>
-        ))}
-      </View>
+        )}
+      />
 
-      <TouchableOpacity style={styles.logoutButton} onPress={() => logout()}>
+      <TouchableOpacity style={styles.logoutButton} onPress={logout}>
         <Text style={styles.logoutText}>Logout</Text>
       </TouchableOpacity>
-    </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     padding: 20,
-    backgroundColor: '#fff',
+    backgroundColor: '#FFF',
   },
   header: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 20,
-  },
-  section: {
-    marginBottom: 20,
+    marginBottom: 15,
   },
   label: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#333',
+    fontSize: 18,
+    marginBottom: 10,
   },
-  info: {
-    fontSize: 16,
-    color: '#555',
+  sectionHeader: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginVertical: 15,
   },
-  order: {
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+  orderContainer: {
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10,
   },
   orderText: {
-    fontSize: 14,
-    color: '#555',
+    fontSize: 16,
+  },
+  itemContainer: {
+    marginLeft: 10,
+    marginTop: 5,
   },
   logoutButton: {
-    backgroundColor: '#d9534f',
-    paddingVertical: 12,
-    borderRadius: 8,
+    paddingVertical: 15,
+    borderRadius: 10,
     alignItems: 'center',
-    marginTop: 30,
+    marginTop: 20,
   },
   logoutText: {
-    color: '#fff',
+    color: '#FFF',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  noUserContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+    backgroundColor: '#FFF',
+  },
+  noUserText: {
+    fontSize: 18,
+    // color: '#888',
+    marginBottom: 20,
+    fontWeight: '5',
+  },
+  loginButton: {
+    backgroundColor: '#000',
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  loginButtonText: {
+    color: '#FFF',
     fontSize: 18,
     fontWeight: 'bold',
   },

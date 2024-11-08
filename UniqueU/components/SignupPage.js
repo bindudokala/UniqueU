@@ -7,10 +7,12 @@ import {
   Text,
   Alert,
 } from 'react-native';
-import { auth, createUserWithEmailAndPassword } from '../config/firebaseConfig';
+import { auth, createUserWithEmailAndPassword, db } from '../config/firebaseConfig';
+import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
 
 const SignupPage = () => {
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -26,6 +28,13 @@ const SignupPage = () => {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
+      await setDoc(doc(db, 'users', user.uid), {
+        username: username,
+        email: email,
+        createdAt: serverTimestamp(),
+        uid: user.uid,
+      });
+
       Alert.alert('Success', 'Signup successful!');
       navigation.replace('Home'); 
       // console.log('User signed up:', user);
@@ -39,6 +48,15 @@ const SignupPage = () => {
     <View style={styles.container}>
       <View style={styles.card}>
         <Text style={styles.title}>Create an Account</Text>
+
+        <TextInput
+          style={[styles.input, styles.inputPlaceholder]}
+          placeholder="Username"
+          placeholderTextColor="#606F7B"
+          value={username}
+          onChangeText={setUsername}
+          autoCapitalize="none"
+        />
 
         <TextInput
           style={[styles.input, styles.inputPlaceholder]}
@@ -79,6 +97,14 @@ const SignupPage = () => {
         <TouchableOpacity style={styles.signupButton} onPress={onSignup}>
           <Text style={styles.signupButtonText}>Signup</Text>
         </TouchableOpacity>
+
+        <View style={styles.loginContainer}>
+          <Text style={styles.loginText}>Already have an account? </Text>
+          <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+            <Text style={styles.loginLink}>Login</Text>
+          </TouchableOpacity>
+        </View>
+
       </View>
     </View>
   );
@@ -123,11 +149,24 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
+    marginBottom: 20,
   },
   signupButtonText: {
     color: '#FFFFFF',
     fontSize: 18,
     fontWeight: '600',
+  },
+  loginContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginBottom: 20,
+  },
+  loginText: {
+    fontSize: 14,
+  },
+  loginLink: {
+    fontSize: 16,
+    fontWeight: '700',
   },
 });
 

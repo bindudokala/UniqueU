@@ -23,8 +23,8 @@ export default async (req, res) => {
         <img src="${item.imageUrl || 'https://via.placeholder.com/80x80?text=Image+Not+Available'}" alt="${item.name}" style="width: 80px; height: auto; border-radius: 5px; margin-right: 15px;">
         <div style="justify-content: center;">
           <p style="margin: 0; font-size: 16px; font-weight: bold;">${item.name}</p>
-          <p style="margin: 5px 0; font-size: 16px; color: #333;">Price: <strong style="color: #888;">$${item.price}</strong></p>
-          <p style="margin: 5px 0; font-size: 16px; color: #333;">Size: <strong style="color: #888;">${item.size}</strong></p>
+          <p style="margin: 5px 0; font-size: 16px; color: #888;">Price: <strong style="color: #333;">$${item.price}</strong></p>
+          <p style="margin: 5px 0; font-size: 16px; color: #888;">Size: <strong style="color: #333;">${item.size}</strong></p>
         </div>
       </div>
     `).join('');
