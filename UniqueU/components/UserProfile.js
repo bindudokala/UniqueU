@@ -1,37 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Alert } from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useAuth } from '../contexts/AuthContext';
-import { db } from '../config/firebaseConfig';
-import { collection, query, where, getDocs } from 'firebase/firestore';
+import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
 const UserProfile = () => {
   const { user, userData, logout } = useAuth();
-  const [orderHistory, setOrderHistory] = useState([]);
   const navigation = useNavigation();
-
-  useEffect(() => {
-    const fetchOrderHistory = async () => {
-      if (!user) return;
-
-      try {
-        const ordersRef = collection(db, 'orders');
-        const q = query(ordersRef, where('uid', '==', user.uid));
-        const querySnapshot = await getDocs(q);
-
-        const orders = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setOrderHistory(orders);
-      } catch (error) {
-        console.error('Error fetching order history:', error);
-        Alert.alert('Error', 'Could not fetch order history');
-      }
-    };
-
-    fetchOrderHistory();
-  }, [user]);
 
   if (!user) {
     return (
@@ -49,33 +24,35 @@ const UserProfile = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>User Profile</Text>
-      <Text style={styles.label}>Username: {userData ? userData.username : 'Loading...'}</Text>
-      <Text style={styles.label}>Email: {user ? user.email : 'Loading...'}</Text>
-      <Text style={styles.sectionHeader}>Order History</Text>
+      {/* Profile Section */}
+      <View style={styles.profileHeader}>
+        <Ionicons name="person-circle-outline" size={80} color="#555" />
+        <Text style={styles.username}>{userData?.username || 'User'}</Text>
+        <Text style={styles.email}>{user.email}</Text>
+      </View>
 
-      <FlatList
-        data={orderHistory}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <View style={styles.orderContainer}>
-            <Text style={styles.orderText}>Order ID: {item.id}</Text>
-            <Text style={styles.orderText}>Date: {item.createdAt?.toDate().toLocaleDateString()}</Text>
-            <Text style={styles.orderText}>Total: ${item.total}</Text>
-            <FlatList
-              data={item.items}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({ item }) => (
-                <View style={styles.itemContainer}>
-                  <Text>{item.name} - ${item.price}</Text>
-                  <Text>Size: {item.size}</Text>
-                </View>
-              )}
-            />
-          </View>
-        )}
-      />
+      {/* Sections */}
+      <View style={styles.sectionsContainer}>
+        <TouchableOpacity style={styles.section} onPress={() => navigation.navigate('ProfileDetails')}>
+          <Ionicons name="person-outline" size={24} color="#333" />
+          <Text style={styles.sectionText}>Profile</Text>
+          <Ionicons name="chevron-forward" size={20} color="#ccc" />
+        </TouchableOpacity>
 
+        <TouchableOpacity style={styles.section} onPress={() => navigation.navigate('OrderHistory')}>
+          <Ionicons name="cube-outline" size={24} color="#333" />
+          <Text style={styles.sectionText}>Order History</Text>
+          <Ionicons name="chevron-forward" size={20} color="#ccc" />
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.section} onPress={() => navigation.navigate('AddressDetails')}>
+          <Ionicons name="location-outline" size={24} color="#333" />
+          <Text style={styles.sectionText}>Address</Text>
+          <Ionicons name="chevron-forward" size={20} color="#ccc" />
+        </TouchableOpacity>
+      </View>
+
+      {/* Logout Button */}
       <TouchableOpacity style={styles.logoutButton} onPress={logout}>
         <Text style={styles.logoutText}>Logout</Text>
       </TouchableOpacity>
@@ -86,47 +63,51 @@ const UserProfile = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
     backgroundColor: '#FFF',
+    padding: 20,
   },
-  header: {
-    fontSize: 24,
+  profileHeader: {
+    alignItems: 'center',
+    marginBottom: 30,
+  },
+  username: {
+    fontSize: 22,
     fontWeight: 'bold',
-    marginBottom: 15,
+    color: '#333',
+    marginTop: 10,
   },
-  label: {
-    fontSize: 18,
-    marginBottom: 10,
-  },
-  sectionHeader: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginVertical: 15,
-  },
-  orderContainer: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 10,
-  },
-  orderText: {
+  email: {
     fontSize: 16,
+    color: '#555',
   },
-  itemContainer: {
+  sectionsContainer: {
+    marginVertical: 20,
+    borderTopWidth: 1,
+    borderTopColor: '#ddd',
+  },
+  section: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
+  },
+  sectionText: {
+    flex: 1,
+    fontSize: 18,
     marginLeft: 10,
-    marginTop: 5,
+    color: '#333',
   },
   logoutButton: {
     backgroundColor: '#000',
-    paddingVertical: 20,
-    borderRadius: 15,
+    paddingVertical: 15,
+    borderRadius: 10,
     alignItems: 'center',
     marginTop: 20,
   },
   logoutText: {
     color: '#FFF',
-    fontSize: 22,
+    fontSize: 18,
     fontWeight: 'bold',
   },
   noUserContainer: {
@@ -138,9 +119,8 @@ const styles = StyleSheet.create({
   },
   noUserText: {
     fontSize: 18,
-    // color: '#888',
     marginBottom: 20,
-    fontWeight: '5',
+    color: '#555',
   },
   loginButton: {
     backgroundColor: '#000',
