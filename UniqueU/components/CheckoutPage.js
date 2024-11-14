@@ -34,6 +34,15 @@ const CheckoutPage = () => {
   const [addresses, setAddresses] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [isSelectingAddress, setIsSelectingAddress] = useState(false);
+  const [isAddingNewAddress, setIsAddingNewAddress] = useState(false);
+  const [newAddress, setNewAddress] = useState({
+    streetAddress: '',
+    apartmentSuite: '',
+    stateProvince: '',
+    zipCode: '',
+    country: '',
+    phoneNumber: '',
+  });
 
   useEffect(() => {
     const fetchAddresses = async () => {
@@ -56,6 +65,36 @@ const CheckoutPage = () => {
 
     fetchAddresses();
   }, [user]);
+
+  const handleSaveNewAddress = async () => {
+    if (!user) return;
+  
+    try {
+      const updatedAddresses = [...addresses, newAddress];
+  
+      const userDocRef = doc(db, 'users', user.uid);
+      await setDoc(userDocRef, { addresses: updatedAddresses }, { merge: true });
+  
+      setAddresses(updatedAddresses);
+      setSelectedAddress(newAddress);
+      setIsAddingNewAddress(false);
+  
+      setNewAddress({
+        streetAddress: '',
+        apartmentSuite: '',
+        stateProvince: '',
+        zipCode: '',
+        country: '',
+        phoneNumber: '',
+      });
+
+      // Alert.alert('Success', 'Address added successfully');
+    } catch (error) {
+      console.error('Error saving address to Firestore:', error);
+      Alert.alert('Error', 'Could not save address');
+    }
+  };
+
 
   const handleOrderCreation = async () => {
     if (!selectedAddress) {
@@ -201,7 +240,26 @@ const CheckoutPage = () => {
             </TouchableOpacity>
           </View>
         ) : (
-          <Text>No address selected. Please select an address.</Text>
+          <View style={styles.noAddressContainer}>
+            <Text style={styles.noAddressText}>No address selected.</Text>
+            <TouchableOpacity onPress={() => setIsAddingNewAddress(true)} style={styles.shippingAddressButton}>
+              <Text style={styles.shippingAddressButtonText}>Add New Address</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+
+        {isAddingNewAddress && (
+          <View style={styles.noAddressContainer}>
+            <TextInput placeholder="Street Address" value={newAddress.streetAddress} onChangeText={(text) => setNewAddress({ ...newAddress, streetAddress: text })} style={styles.input} />
+            <TextInput placeholder="Apartment/Suite" value={newAddress.apartmentSuite} onChangeText={(text) => setNewAddress({ ...newAddress, apartmentSuite: text })} style={styles.input} />
+            <TextInput placeholder="State/Province" value={newAddress.stateProvince} onChangeText={(text) => setNewAddress({ ...newAddress, stateProvince: text })} style={styles.input} />
+            <TextInput placeholder="Zip Code" value={newAddress.zipCode} onChangeText={(text) => setNewAddress({ ...newAddress, zipCode: text })} style={styles.input} />
+            <TextInput placeholder="Country" value={newAddress.country} onChangeText={(text) => setNewAddress({ ...newAddress, country: text })} style={styles.input} />
+            <TextInput placeholder="Phone Number" value={newAddress.phoneNumber} onChangeText={(text) => setNewAddress({ ...newAddress, phoneNumber: text })} style={styles.input} />
+            <TouchableOpacity onPress={handleSaveNewAddress} style={styles.shippingAddressButton}>
+              <Text style={styles.shippingAddressButtonText}>Save Address</Text>
+            </TouchableOpacity>
+          </View>
         )}
 
         <Text style={styles.sectionTitle}>Payment Information</Text>
@@ -371,6 +429,27 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontSize: 20,
+    fontWeight: 'bold',
+  },
+  noAddressContainer: {
+    alignItems: 'left',
+    marginVertical: 3,
+  },
+  noAddressText: {
+    fontSize: 18,
+    fontWeight: '400',
+  },
+  shippingAddressButton: {
+    marginTop: 10,
+    backgroundColor: '#000',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    marginBottom: 25,
+  },
+  shippingAddressButtonText: {
+    color: '#FFF',
+    fontSize: 16,
     fontWeight: 'bold',
   },
   modalContainer: {

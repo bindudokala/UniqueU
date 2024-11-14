@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert, Modal, ScrollView } from 'react-native';
 import { useAuth } from '../contexts/AuthContext';
 import { db } from '../config/firebaseConfig';
+import { useNavigation } from '@react-navigation/native';
+import { Ionicons } from '@expo/vector-icons';
 import { doc, getDoc, setDoc, updateDoc, arrayUnion } from 'firebase/firestore';
 
 const AddressDetails = () => {
@@ -18,6 +20,7 @@ const AddressDetails = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(true);
   const [editIndex, setEditIndex] = useState(null);
+  const navigation = useNavigation();
 
   useEffect(() => {
     const fetchAddresses = async () => {
@@ -110,7 +113,12 @@ const AddressDetails = () => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.header}>Addresses</Text>
+      <View style={styles.headerContainer}>
+      <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Ionicons name="chevron-back" size={24} color="black" />
+        </TouchableOpacity>
+        <Text style={styles.header}>Addresses</Text>
+      </View>
 
       {addresses.map((addr, index) => (
         <View key={index} style={styles.addressContainer}>
@@ -192,11 +200,16 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: '#FFF',
   },
+  headerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 25,
+  },
   header: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 20,
-    color: '#333',
+    flex: 1,
+    textAlign: 'center',
   },
   addressContainer: {
     padding: 15,
