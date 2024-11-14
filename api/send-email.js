@@ -60,6 +60,21 @@ export default async (req, res) => {
           <p><strong>Sales Tax (5%):</strong> $${orderDetails.tax}</p>
           <h3 style="margin-top: 10px; font-weight: bold;">Grand Total: $${orderDetails.total}</h3>
         </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: start; background-color: #f3f4f6; padding: 15px; border-radius: 5px; margin-top: 20px;">
+          <div>
+            <h4 style="margin-bottom: 10px;">Delivery Address</h4>
+            <p style="margin: 0; font-weight: bold;">${username}</p>
+            <p style="margin: 0;">${orderDetails.address.streetAddress},</p>
+            <p style="margin: 0;">${orderDetails.address.apartmentSuite},</p>
+            <p style="margin: 0;">${orderDetails.address.stateProvince}, ${orderDetails.address.country} - ${orderDetails.address.zipCode}</p>
+            <p style="margin: 0;">Mobile: ${orderDetails.address.phoneNumber}</p>
+          </div>
+          <div style="text-align: right;">
+            <h4 style="margin-bottom: 10px;">Mode of Payment</h4>
+            <p style="margin: 0;">Debit/Credit Card</p>
+          </div>
+        </div>
         
         <p style="font-size: 16px; margin-top: 20px;">We hope to deliver your order by the estimated date. Thank you for shopping with us!</p>
       </div>

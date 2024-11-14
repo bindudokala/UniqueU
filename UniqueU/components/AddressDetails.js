@@ -1,17 +1,26 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert, Modal, ScrollView } from 'react-native';
 import { useAuth } from '../contexts/AuthContext';
 import { db } from '../config/firebaseConfig';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, updateDoc, arrayUnion } from 'firebase/firestore';
 
 const AddressDetails = () => {
   const { user } = useAuth();
-  const [address, setAddress] = useState('');
+  const [addresses, setAddresses] = useState([]);
+  const [address, setAddress] = useState({
+    streetAddress: '',
+    apartmentSuite: '',
+    stateProvince: '',
+    zipCode: '',
+    country: '',
+    phoneNumber: '',
+  });
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [editIndex, setEditIndex] = useState(null);
 
   useEffect(() => {
-    const fetchAddress = async () => {
+    const fetchAddresses = async () => {
       if (!user) return;
 
       try {
@@ -20,19 +29,17 @@ const AddressDetails = () => {
 
         if (userDoc.exists()) {
           const userData = userDoc.data();
-          setAddress(userData.address || '');
-        } else {
-          setAddress('');
+          setAddresses(userData.addresses || []);
         }
       } catch (error) {
-        console.error('Error fetching address:', error);
-        Alert.alert('Error', 'Could not fetch address');
+        console.error('Error fetching addresses:', error);
+        Alert.alert('Error', 'Could not fetch addresses');
       } finally {
         setLoading(false);
       }
     };
 
-    fetchAddress();
+    fetchAddresses();
   }, [user]);
 
   const handleSaveAddress = async () => {
@@ -40,13 +47,57 @@ const AddressDetails = () => {
 
     try {
       const userDocRef = doc(db, 'users', user.uid);
-      await setDoc(userDocRef, { address }, { merge: true });
-      Alert.alert('Success', 'Address saved successfully');
+      const updatedAddresses = [...addresses];
+
+      if (editIndex !== null) {
+        // Edit existing address
+        updatedAddresses[editIndex] = address;
+      } else {
+        // Add new address
+        updatedAddresses.push(address);
+      }
+
+      await setDoc(userDocRef, { addresses: updatedAddresses }, { merge: true });
+      setAddresses(updatedAddresses);
+
+      Alert.alert('Success', editIndex !== null ? 'Address updated successfully' : 'Address added successfully');
       setIsEditing(false);
+      setAddress({
+        streetAddress: '',
+        apartmentSuite: '',
+        stateProvince: '',
+        zipCode: '',
+        country: '',
+        phoneNumber: '',
+      });
+      setEditIndex(null);
     } catch (error) {
       console.error('Error saving address:', error);
       Alert.alert('Error', 'Could not save address');
     }
+  };
+
+  const handleChange = (field, value) => {
+    setAddress(prevAddress => ({ ...prevAddress, [field]: value }));
+  };
+
+  const handleEditAddress = (index) => {
+    setEditIndex(index);
+    setAddress(addresses[index]);
+    setIsEditing(true);
+  };
+
+  const handleAddNewAddress = () => {
+    setEditIndex(null);
+    setAddress({
+      streetAddress: '',
+      apartmentSuite: '',
+      stateProvince: '',
+      zipCode: '',
+      country: '',
+      phoneNumber: '',
+    });
+    setIsEditing(true);
   };
 
   if (loading) {
@@ -58,37 +109,86 @@ const AddressDetails = () => {
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>Address</Text>
+    <ScrollView contentContainerStyle={styles.container}>
+      <Text style={styles.header}>Addresses</Text>
 
-      {address && !isEditing ? (
-        <View style={styles.addressContainer}>
-          <Text style={styles.addressText}>{address}</Text>
-          <TouchableOpacity onPress={() => setIsEditing(true)} style={styles.editButton}>
+      {addresses.map((addr, index) => (
+        <View key={index} style={styles.addressContainer}>
+          <Text style={styles.addressText}>Street Address: {addr.streetAddress}</Text>
+          <Text style={styles.addressText}>Apartment/Suite: {addr.apartmentSuite}</Text>
+          <Text style={styles.addressText}>State/Province: {addr.stateProvince}</Text>
+          <Text style={styles.addressText}>Zip Code: {addr.zipCode}</Text>
+          <Text style={styles.addressText}>Country: {addr.country}</Text>
+          <Text style={styles.addressText}>Phone Number: {addr.phoneNumber}</Text>
+          <TouchableOpacity onPress={() => handleEditAddress(index)} style={styles.editButton}>
             <Text style={styles.editButtonText}>Edit Address</Text>
           </TouchableOpacity>
         </View>
-      ) : (
-        <View style={styles.inputContainer}>
-          <TextInput
-            placeholder="Enter your address"
-            value={address}
-            onChangeText={setAddress}
-            style={styles.input}
-            multiline
-          />
-          <TouchableOpacity onPress={handleSaveAddress} style={styles.saveButton}>
-            <Text style={styles.saveButtonText}>Save Address</Text>
-          </TouchableOpacity>
+      ))}
+
+      <TouchableOpacity onPress={handleAddNewAddress} style={styles.addButton}>
+        <Text style={styles.addButtonText}>Add New Address</Text>
+      </TouchableOpacity>
+
+      <Modal visible={isEditing} animationType="slide" transparent={true}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalHeader}>{editIndex !== null ? 'Edit Address' : 'Add Address'}</Text>
+            <TextInput
+              placeholder="Street Address"
+              value={address.streetAddress}
+              onChangeText={(text) => handleChange('streetAddress', text)}
+              style={styles.input}
+            />
+            <TextInput
+              placeholder="Apartment/Suite"
+              value={address.apartmentSuite}
+              onChangeText={(text) => handleChange('apartmentSuite', text)}
+              style={styles.input}
+            />
+            <TextInput
+              placeholder="State/Province"
+              value={address.stateProvince}
+              onChangeText={(text) => handleChange('stateProvince', text)}
+              style={styles.input}
+            />
+            <TextInput
+              placeholder="Zip Code"
+              value={address.zipCode}
+              onChangeText={(text) => handleChange('zipCode', text)}
+              style={styles.input}
+            />
+            <TextInput
+              placeholder="Country"
+              value={address.country}
+              onChangeText={(text) => handleChange('country', text)}
+              style={styles.input}
+            />
+            <TextInput
+              placeholder="Phone Number"
+              value={address.phoneNumber}
+              onChangeText={(text) => handleChange('phoneNumber', text)}
+              keyboardType="phone-pad"
+              style={styles.input}
+            />
+            <View style={styles.modalButtons}>
+              <TouchableOpacity onPress={() => setIsEditing(false)} style={styles.cancelButton}>
+                <Text style={styles.cancelButtonText}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={handleSaveAddress} style={styles.saveButton}>
+                <Text style={styles.saveButtonText}>Save Address</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
-      )}
-    </View>
+      </Modal>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     padding: 20,
     backgroundColor: '#FFF',
   },
@@ -103,6 +203,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: '#f5f5f5',
     marginBottom: 15,
+    position: 'relative',
   },
   addressText: {
     fontSize: 16,
@@ -116,14 +217,43 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 15,
     borderRadius: 5,
+    position: 'absolute',
+    right: 10,
+    bottom: 10,
   },
   editButtonText: {
     color: '#FFF',
     fontSize: 16,
     fontWeight: 'bold',
   },
-  inputContainer: {
-    marginTop: 10,
+  addButton: {
+    backgroundColor: '#000',
+    paddingVertical: 15,
+    borderRadius: 10,
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  addButtonText: {
+    color: '#FFF',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+  },
+  modalContent: {
+    width: '90%',
+    padding: 20,
+    backgroundColor: '#FFF',
+    borderRadius: 10,
+  },
+  modalHeader: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
   },
   input: {
     borderWidth: 1,
@@ -131,25 +261,32 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     fontSize: 16,
-    textAlignVertical: 'top',
-    minHeight: 100,
     marginBottom: 10,
+  },
+  modalButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 10,
+  },
+  cancelButton: {
+    backgroundColor: '#777',
+    paddingVertical: 10,
+    borderRadius: 5,
+    paddingHorizontal: 20,
+  },
+  cancelButtonText: {
+    color: '#FFF',
+    fontSize: 16,
   },
   saveButton: {
     backgroundColor: '#000',
-    paddingVertical: 15,
-    borderRadius: 10,
-    alignItems: 'center',
+    paddingVertical: 10,
+    borderRadius: 5,
+    paddingHorizontal: 20,
   },
   saveButtonText: {
     color: '#FFF',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    fontSize: 16,
   },
 });
 
