@@ -17,6 +17,7 @@ import UserProfile from '../components/UserProfile';
 import OrderHistory from '../components/OrderHistory';
 import ProfileDetails from '../components/ProfileDetails';
 import AddressDetails from '../components/AddressDetails';
+import ProductSearch from '../components/ProductSearch';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 const Stack = createStackNavigator();
@@ -65,6 +66,8 @@ const RootNavigator = () => {
           <Stack.Screen name="ProfileDetails" component={ProfileDetails} options={{ title: 'ProfileDetails' }} />
 
           <Stack.Screen name="AddressDetails" component={AddressDetails} options={{ title: 'AddressDetails' }} />
+
+          <Stack.Screen name="ProductSearch" component={ProductSearch} options={{ title: 'ProductSearch' }} />
 
         </Stack.Navigator>
       </View>

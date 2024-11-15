@@ -48,29 +48,29 @@ export default async (req, res) => {
         </div>
         
         <div style="padding: 15px; border: 1px solid #e0e0e0; border-radius: 5px; margin-top: 20px;">
-          <h4>Items you have purchased</h4>
+          <h3>Items you have purchased</h3>
           <div style="padding: 15px; border: 1px solid #e0e0e0; border-radius: 5px; margin-top: 20px;">
             ${generateOrderItemsHtml(orderDetails.items)}
           </div>
         </div>
 
         <div style="margin-top: 20px; padding: 15px; background-color: #f9f9f9; border-radius: 5px;">
-          <h4>Price Details</h4>
+          <h3>Price Details</h3>
           <p><strong>Order Sub-total:</strong> $${orderDetails.subtotal}</p>
           <p><strong>Sales Tax (5%):</strong> $${orderDetails.tax}</p>
           <h3 style="margin-top: 10px; font-weight: bold;">Grand Total: $${orderDetails.total}</h3>
         </div>
 
         <div style="display: flex; justify-content: space-between; align-items: start; background-color: #f3f4f6; padding: 15px; border-radius: 5px; margin-top: 20px;">
-          <div>
-            <h4 style="margin-bottom: 10px;">Delivery Address</h4>
+          <div style="width: 65%;">
+            <h3 style="margin-bottom: 10px;">Delivery Address</h3>
             <p style="margin: 0; font-weight: bold;">${username}</p>
             <p style="margin: 0;">${orderDetails.address.streetAddress},</p>
             <p style="margin: 0;">${orderDetails.address.apartmentSuite},</p>
             <p style="margin: 0;">${orderDetails.address.stateProvince}, ${orderDetails.address.country} - ${orderDetails.address.zipCode}</p>
             <p style="margin: 0;">Mobile: ${orderDetails.address.phoneNumber}</p>
           </div>
-          <div style="text-align: right;">
+          <div style="width: 35%; text-align: right;">
             <h4 style="margin-bottom: 10px;">Mode of Payment</h4>
             <p style="margin: 0;">Debit/Credit Card</p>
           </div>
