@@ -10,6 +10,7 @@ import {
   Alert,
   Modal,
   ScrollView,
+  ActivityIndicator,
 } from 'react-native';
 import { fetchParentDocId, fetchCategories, fetchProductsByCategory } from '../services/firestoreService';
 import { Ionicons } from '@expo/vector-icons';
@@ -104,12 +105,20 @@ const ProductSearch = ({ route, navigation }) => {
   const openSortModal = () => setIsSortMenuVisible(true);
   const closeSortModal = () => setIsSortMenuVisible(false);
 
+  const clearFilters = () => {
+    setSelectedCategory(null);
+    setSelectedPriceRange(null);
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.headerText}>Showing results for '{searchText}'</Text>
 
       {loading ? (
-        <Text>Loading...</Text>
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#1E88E5" />
+          <Text style={styles.loadingText}>Loading...</Text>
+        </View>
       ) : searchResults.length > 0 ? (
         <FlatList
           data={searchResults}
@@ -164,6 +173,9 @@ const ProductSearch = ({ route, navigation }) => {
             <TouchableOpacity style={styles.closeButton} onPress={closeFilterModal}>
               <Text style={styles.closeButtonText}>Apply Filters</Text>
             </TouchableOpacity>
+            <TouchableOpacity style={styles.clearButton} onPress={clearFilters}>
+              <Text style={styles.clearButtonText}>Clear Filters</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </Modal>
@@ -174,10 +186,10 @@ const ProductSearch = ({ route, navigation }) => {
           <View style={styles.modalContent}>
             <Text style={styles.modalHeader}>Sort By</Text>
             <TouchableOpacity onPress={() => { setSortOrder('asc'); closeSortModal(); }}>
-              <Text style={styles.filterOption}>Price: Low to High</Text>
+              <Text style={[styles.filterOption, sortOrder === 'asc' && styles.selectedFilterOption]}>Price: Low to High</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => { setSortOrder('desc'); closeSortModal(); }}>
-              <Text style={styles.filterOption}>Price: High to Low</Text>
+              <Text style={[styles.filterOption, sortOrder === 'desc' && styles.selectedFilterOption]}>Price: High to Low</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.closeButton} onPress={closeSortModal}>
               <Text style={styles.closeButtonText}>Close</Text>
@@ -201,6 +213,15 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginVertical: 10,
     textAlign: 'center',
+  },
+  loadingContainer: {
+    flex: 1,
+    paddingVertical: 310,
+    alignItems: 'center',
+  },
+  loadingText: {
+    fontSize: 18,
+    fontWeight: 'bold',
   },
   productsContainer: {
     paddingBottom: 60,
@@ -310,6 +331,18 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
+  clearButton: {
+    backgroundColor: '#000',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    marginTop: 10,
+  },
+  clearButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  }
 });
 
 export default ProductSearch;

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, Alert, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, FlatList, Alert, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '../contexts/AuthContext';
 import { db } from '../config/firebaseConfig';
@@ -9,6 +9,7 @@ import { useNavigation } from '@react-navigation/native';
 const OrderHistory = () => {
   const { user } = useAuth();
   const [orderHistory, setOrderHistory] = useState([]);
+  const [loading, setLoading] = useState(true); 
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -28,11 +29,22 @@ const OrderHistory = () => {
       } catch (error) {
         console.error('Error fetching order history:', error);
         Alert.alert('Error', 'Could not fetch order history');
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchOrderHistory();
   }, [user]);
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#1E88E5" />
+        <Text style={styles.loadingText}>Loading...</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -43,36 +55,42 @@ const OrderHistory = () => {
         <Text style={styles.header}>Order History</Text>
       </View>
 
-      <FlatList
-        data={orderHistory}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <View style={styles.orderContainer}>
-            <Text style={styles.orderId}>Order ID: <Text style={styles.orderIdValue}>{item.id}</Text></Text>
-            <Text style={styles.orderDate}>Date: {item.createdAt?.toDate().toLocaleDateString()}</Text>
-            <View style={styles.itemsHeader}>
-              <Text style={styles.itemsHeaderText}>Items:</Text>
-            </View>
-            <FlatList
-              data={item.items}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({ item }) => (
-                <View style={styles.itemContainer}>
-                  <Text style={styles.itemName}>{item.name}</Text>
-                  <View style={styles.itemDetails}>
-                    <Text style={styles.itemSize}>Size: {item.size}</Text>
-                    <Text style={styles.itemPrice}>${item.price}</Text>
+      {orderHistory.length === 0 ? (
+        <View style={styles.emptyContainer}>
+          <Text style={styles.emptyText}>No orders placed</Text>
+        </View>
+        ) : (
+        <FlatList
+          data={orderHistory}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <View style={styles.orderContainer}>
+              <Text style={styles.orderId}>Order ID: <Text style={styles.orderIdValue}>{item.id}</Text></Text>
+              <Text style={styles.orderDate}>Date: {item.createdAt?.toDate().toLocaleDateString()}</Text>
+              <View style={styles.itemsHeader}>
+                <Text style={styles.itemsHeaderText}>Items:</Text>
+              </View>
+              <FlatList
+                data={item.items}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({ item }) => (
+                  <View style={styles.itemContainer}>
+                    <Text style={styles.itemName}>{item.name}</Text>
+                    <View style={styles.itemDetails}>
+                      <Text style={styles.itemSize}>Size: {item.size}</Text>
+                      <Text style={styles.itemPrice}>${item.price}</Text>
+                    </View>
                   </View>
-                </View>
-              )}
-            />
-            <View style={styles.totalContainer}>
-              <Text style={styles.orderTotalLabel}>Total:</Text>
-              <Text style={styles.orderTotalValue}>${item.total}</Text>
+                )}
+              />
+              <View style={styles.totalContainer}>
+                <Text style={styles.orderTotalLabel}>Total:</Text>
+                <Text style={styles.orderTotalValue}>${item.total}</Text>
+              </View>
             </View>
-          </View>
-        )}
-      />
+          )}
+        />
+      )} 
     </View>
   );
 };
@@ -95,6 +113,24 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     flex: 1,
+  },
+  emptyContainer: {
+    flex: 1,
+    paddingVertical: 310,
+    alignItems: 'center',
+  },
+  emptyText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  loadingContainer: {
+    flex: 1,
+    paddingVertical: 310,
+    alignItems: 'center',
+  },
+  loadingText: {
+    fontSize: 18,
+    fontWeight: 'bold',
   },
   orderContainer: {
     borderWidth: 1,

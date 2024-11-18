@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert, Modal, ScrollView } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert, Modal, ScrollView, ActivityIndicator } from 'react-native';
 import { useAuth } from '../contexts/AuthContext';
 import { db } from '../config/firebaseConfig';
 import { useNavigation } from '@react-navigation/native';
@@ -53,10 +53,8 @@ const AddressDetails = () => {
       const updatedAddresses = [...addresses];
 
       if (editIndex !== null) {
-        // Edit existing address
         updatedAddresses[editIndex] = address;
       } else {
-        // Add new address
         updatedAddresses.push(address);
       }
 
@@ -106,7 +104,8 @@ const AddressDetails = () => {
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <Text>Loading...</Text>
+        <ActivityIndicator size="large" color="#1E88E5" />
+        <Text style={styles.loadingText}>Loading...</Text>
       </View>
     );
   }
@@ -210,6 +209,15 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     flex: 1,
     textAlign: 'center',
+  },
+  loadingContainer: {
+    flex: 1,
+    paddingVertical: 310,
+    alignItems: 'center',
+  },
+  loadingText: {
+    fontSize: 18,
+    fontWeight: 'bold',
   },
   addressContainer: {
     padding: 15,

@@ -5,7 +5,7 @@ import LoginPage from '../components/LoginPage';
 import SignupPage from '../components/SignupPage';
 import HomePage from '../components/HomePage';
 import Header from '../components/Header';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { AuthProvider, useAuth } from '../contexts/AuthContext'; 
 import CategoryProductsPage from '../components/CategoryProductsPage'; 
 import ProductDetailsPage from '../components/ProductDetailsPage';
@@ -36,7 +36,12 @@ const RootNavigator = () => {
   const { user, isLoading } = useAuth();
 
   if (isLoading) {
-    return <Text>Loading...</Text>;
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#1E88E5" />
+        <Text style={styles.loadingText}>Loading...</Text>
+      </View>
+    );
   }
   
   return (
@@ -79,4 +84,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  loadingContainer: {
+    flex: 1,
+    paddingVertical: 310,
+    alignItems: 'center',
+  },
+  loadingText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+
 });
