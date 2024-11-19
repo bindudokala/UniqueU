@@ -41,7 +41,9 @@ const CartPage = () => {
   if (cartItems.length === 0) {
     return (
       <View style={styles.emptyCartContainer}>
-        <Text style={styles.errorText}>No product found in the cart.</Text>
+        <View style={styles.noProductsContainer}>
+          <Text style={styles.noProductsText}>No products found in the cart.</Text>
+        </View>
   
         <View style={{ flex: 1 }} />
   
@@ -142,6 +144,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 15,
     backgroundColor: '#fff',
+  },
+  noProductsContainer: {
+    flex: 1,
+    paddingVertical: 310,
+    alignItems: 'center',
+  },
+  noProductsText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: 'red',
   },
   emptyCartContinueShoppingButton: {
     backgroundColor: '#000', 
@@ -288,13 +300,6 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
-  },
-  errorText: {
-    fontSize: 18,
-    color: 'red',
-    textAlign: 'center',
-    marginTop: 20,
-    marginBottom: 20,
   },
 });
 

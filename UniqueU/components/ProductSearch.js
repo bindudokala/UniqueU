@@ -129,7 +129,9 @@ const ProductSearch = ({ route, navigation }) => {
           contentContainerStyle={styles.productsContainer}
         />
       ) : (
-        <Text>No products found</Text>
+        <View style={styles.noProductsContainer}>
+          <Text style={styles.noProductsText}>No products found</Text>
+        </View> 
       )}
 
       <View style={styles.bottomContainer}>
@@ -220,6 +222,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   loadingText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  noProductsContainer: {
+    flex: 1,
+    paddingVertical: 310,
+    alignItems: 'center',
+  },
+  noProductsText: {
     fontSize: 18,
     fontWeight: 'bold',
   },
