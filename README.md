@@ -73,7 +73,23 @@ The UniqueU app offers an easy-to-use interface for shopping enthusiasts. Users 
 - Email includes order details, estimated delivery date, and a list of purchased items.
 - Implemented with Vercel Serverless Functions and SendGrid for email delivery.
 
-### 11. **User Profile Page**
+### 11. **Search and Filter Features**
+- **Search Functionality:**
+    - Allows users to search for products by name across multiple categories.
+    - Integrated with a loading indicator to show the search process.
+    - Displays a message when no products match the search criteria.
+- **Filter by Category and Price Range:**
+    - Users can filter results by selecting product categories (e.g., sarees, kurtis, lehengas).
+    - Price ranges can also be selected (e.g., $0-$50, $51-$100, 101-200).
+    - Selected filters are dynamically highlighted (bold) for clear identification.
+    - Includes a **Clear Filters** button to reset all applied filters.
+- **Sort by Price:**
+    - Allows users to sort search results by price:
+      - **Low to High.**
+      - **High to Low.**
+    - Sort selection dynamically updates the displayed results.
+
+### 12. **User Profile Page**
 - Displays the logged-in user's **Username, Email**, and **Order History**.
 - **Order History** shows each order’s details, including items purchased, order ID, date, and total amount.
 - Includes sections for **Order Details** and **Address Management**:
@@ -88,7 +104,7 @@ The UniqueU app offers an easy-to-use interface for shopping enthusiasts. Users 
 - **Navigation**: React Navigation
 - **Backend Services**: Firebase Firestore and Firebase Authentication
 - **State Management**: React Hooks (`useState`, `useEffect`, `useContext`)
-- **Icons**: Expo Vector Icons (`Ionicons`)
+- **Icons and Styling**: Expo Vector Icons (`Ionicons`), CSS-in-JS Libraries
 - **Persistence**: AsyncStorage for user sessions
 - **Email Service**: SendGrid (for sending order confirmation emails)
-
+- **APIs and Serverless Functions** - Vercel Serverless Functions for backend API logic(sending order confirmation emails)
